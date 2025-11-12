@@ -39,7 +39,7 @@
 # define YY_YY_BUILD_CLI_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+# define YYDEBUG 1
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -58,9 +58,11 @@ extern int yydebug;
     PROJECT = 259,                 /* PROJECT  */
     INSTALL = 260,                 /* INSTALL  */
     TEMPLATE = 261,                /* TEMPLATE  */
-    IDENTIFIER = 262,              /* IDENTIFIER  */
-    STRING = 263,                  /* STRING  */
-    NEWLINE = 264                  /* NEWLINE  */
+    COPY = 262,                    /* COPY  */
+    DELETE = 263,                  /* DELETE  */
+    IDENTIFIER = 264,              /* IDENTIFIER  */
+    STRING = 265,                  /* STRING  */
+    NEWLINE = 266                  /* NEWLINE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -73,7 +75,7 @@ union YYSTYPE
 
     char *string;
 
-#line 77 "build/cli.tab.h"
+#line 79 "build/cli.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -9,7 +9,8 @@
 
 #include "../utils/defs.h"
 #include "../utils/utils.h"
-
+#include "../utils/selection.h"
+#include "../scaffold/scaffold.h"
 
 void install_template(const char *template_path)
 {
@@ -220,10 +221,111 @@ int extract_placeholders_from_template(
     return placeholder_count;
 }
 
+/* Copy a template */
+void copy_template()
+{
+    char templates_list[64][256];
+
+    int num_templates = list_templates(templates_list, 64);
+
+    const char *template_names[64];
+    for (int i = 0; i < num_templates; i++)
+    {
+        template_names[i] = templates_list[i];
+    }
+    int template_selection = selection("Which template do you want to copy?", template_names, num_templates);
+
+    if (template_selection < 0)
+    {
+        return;
+    }
+
+    const char *filename = template_names[template_selection];
+    char src_path[512];
+    snprintf(src_path, sizeof(src_path), ".templates/%s", filename);
+
+    char new_name[512];
+    printf("Enter a new filename for the copied template: ");
+    if (scanf("%255s", new_name) != 1)
+    {
+        printf("Invalid input.\n");
+        return;
+    }
+
+    new_name[sizeof(new_name) - 1] = '\0';
+    if (strlen(new_name) > 200)
+    {
+        printf("Error: template name too long.\n");
+        return;
+    }
+
+    char dest_path[1024];
+
+    snprintf(dest_path, sizeof(dest_path), ".templates/%s.tmpl", new_name);
+
+    if (file_exists(dest_path))
+    {
+        printf("Error: A template named '%s' already exists.\n", new_name);
+        return;
+    }
+
+    if (copy_file(src_path, dest_path))
+        printf("Template copied successfully to %s\n", dest_path);
+    else
+        printf("Failed to copy template.\n");
+}
+
+/* Delete a template */
+void delete_template()
+{
+    char templates_list[64][256];
+    int num_templates = list_templates(templates_list, 64);
+
+    if (num_templates == 0)
+    {
+        printf("No templates found to delete.\n");
+        return;
+    }
+
+     const char *template_names[64];
+    for (int i = 0; i < num_templates; i++)
+    {
+        template_names[i] = templates_list[i];
+    }
+
+    int selected = selection("Which template do you want to delete?", template_names, num_templates);
+    if (selected < 0)
+    {
+        printf("Deletion canceled.\n");
+        return;
+    }
+
+    const char *selected_template = template_names[selected];
+
+    const char *confirm_options[] = {"No", "Yes"};
+    int confirm = selection("Are you sure you want to delete this template?", confirm_options, 2);
+    if (confirm != 1) // 1 = "Yes"
+    {
+        printf("Deletion canceled.\n");
+        return;
+    }
+    
+    char path[512];
+    snprintf(path, sizeof(path), ".templates/%s", selected_template);
+
+    if (remove(path) == 0)
+    {
+        printf("Template '%s' deleted successfully.\n", selected_template);
+    }
+    else
+    {
+        perror("Error deleting template");
+    }
+}
 
 /* Generate a new file from a template */
 void generate_project_from_template(const char *templateName, const char *projectName, bool customize)
-{    
+{
     char templatePath[512];
     snprintf(templatePath, sizeof(templatePath), ".templates/%s", templateName);
 
@@ -353,7 +455,7 @@ void generate_project_from_template(const char *templateName, const char *projec
                     strncpy(user_values[i], placeholder_defaults[i], sizeof(user_values[i]));
             }
 
-            // Build pointer arrays for replacement 
+            // Build pointer arrays for replacement
             const char *replacement_ptrs[MAX_PLACEHOLDERS];
             const char *key_ptrs[MAX_PLACEHOLDERS];
             for (int i = 0; i < num_placeholders; i++)
@@ -362,7 +464,7 @@ void generate_project_from_template(const char *templateName, const char *projec
                 key_ptrs[i] = placeholder_keys[i];
             }
 
-            // Generate file 
+            // Generate file
             fseek(templateFile, section_start, SEEK_SET);
             create_file_from_line(templateFile, filePath, key_ptrs, replacement_ptrs, num_placeholders);
         }

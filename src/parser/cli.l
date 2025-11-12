@@ -16,6 +16,8 @@ void yyerror(const char *s);
 "project"       { return PROJECT; }
 "install"       { return INSTALL; }
 "template"      { return TEMPLATE; }
+"copy"          { return COPY; }
+"delete"        { return DELETE;}
 
 [a-zA-Z_][a-zA-Z0-9_.]*  { 
     yylval.string = strdup(yytext);

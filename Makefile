@@ -44,7 +44,7 @@ $(BUILD_DIR):
 
 # Generate parser
 $(YACC_OUT) $(YACC_HDR): $(YACC_SRC) | $(BUILD_DIR)
-	@bison -d -o $(YACC_OUT) $(YACC_SRC)
+	@bison -d -t -o $(YACC_OUT) $(YACC_SRC)
 
 # Generate lexer
 $(LEX_OUT): $(LEX_SRC) $(YACC_HDR) | $(BUILD_DIR)
