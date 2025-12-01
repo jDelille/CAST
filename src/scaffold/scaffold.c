@@ -16,14 +16,12 @@
 /* List templates */
 int list_templates(char templates[][256], int max_templates)
 {
-    // Find the .templates directory, starting from the current directory and moving upwards
     char* templates_dir = find_templates_directory();
     if (templates_dir == NULL) {
         fprintf(stderr, "Error: .templates directory not found.\n");
         return 0;
     }
 
-    // Build the full path for the templates directory
     char templates_path[512];
     snprintf(templates_path, sizeof(templates_path), "%s/.templates", templates_dir);
     free(templates_dir); 
@@ -39,16 +37,15 @@ int list_templates(char templates[][256], int max_templates)
     int count = 0;
     char path[1024];
 
-    // Read the files inside .templates
     while ((file = readdir(d)) != NULL && count < max_templates)
     {
         snprintf(path, sizeof(path), "%s/%s", templates_path, file->d_name);
         path[sizeof(path) - 1] = '\0';
 
-        if (stat(path, &file_info) == 0 && S_ISREG(file_info.st_mode))  // Check if it's a regular file
+        if (stat(path, &file_info) == 0 && S_ISREG(file_info.st_mode))  
         {
             strncpy(templates[count], file->d_name, 256);
-            templates[count][255] = '\0'; // Ensure null termination
+            templates[count][255] = '\0';
             count++;
         }
     }
@@ -164,7 +161,7 @@ void scaffold()
 
     if (!choose_template(template_name, sizeof(template_name)))
     {
-        return; // No template selected, exit
+        return; 
     }
 
     int customize = ask_to_customize();

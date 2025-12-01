@@ -8,6 +8,7 @@
 #include <sys/stat.h> 
 #include <libgen.h>    
 #include <dirent.h>
+#include <errno.h>
 
 /**
  * @brief Reads a single character from standard input without waiting for the Enter key
@@ -157,12 +158,27 @@ void trim_trailing_whitespace(char *string)
 
 void ensure_parent_dirs(const char *file_path)
 {
-    char tmp[512];
-    strcpy(tmp, file_path);
-    char *dir = dirname(tmp);
-    if (dir)
-    {
-        mkdir(dir, 0755);
+      char tmp[512];
+    strncpy(tmp, file_path, sizeof(tmp));
+    tmp[sizeof(tmp) - 1] = '\0';
+
+    char *dir = dirname(tmp); // parent directory
+
+    char path[512] = "";
+    char *segment = strtok(dir, "/"); // split by slash
+
+    while (segment) {
+        if (strlen(path) > 0) {
+            strncat(path, "/", sizeof(path) - strlen(path) - 1);
+        }
+        strncat(path, segment, sizeof(path) - strlen(path) - 1);
+
+        // Create this segment if it doesn't exist
+        if (mkdir(path, 0755) != 0 && errno != EEXIST) {
+            perror("mkdir failed");
+        }
+
+        segment = strtok(NULL, "/");
     }
 }
 
@@ -175,13 +191,11 @@ char* find_templates_directory() {
     char current_dir[512];
 
     // Start from the root of the project, specify this directory explicitly
-    const char *root_directory = "/mnt/c/Users/justi/Desktop/raft";  // Update this to your root directory
+    const char *root_directory = "/mnt/c/Users/justi/Desktop/raft";  
 
     // Set the current directory to root directory
     strncpy(current_dir, root_directory, sizeof(current_dir));
     current_dir[sizeof(current_dir) - 1] = '\0';  // Ensure null termination
-
-    printf("Debug: Starting search from directory: %s\n", current_dir);
 
     // Look for the .templates folder in the root directory or its subdirectories
     DIR *d = opendir(current_dir);
@@ -190,8 +204,7 @@ char* find_templates_directory() {
         while (entry) {
             if (strcmp(entry->d_name, ".templates") == 0) {
                 closedir(d);
-                printf("Found .templates directory at: %s\n", current_dir);
-                return strdup(current_dir);  // Return the path of the .templates directory
+                return strdup(current_dir); 
             }
             entry = readdir(d);
         }

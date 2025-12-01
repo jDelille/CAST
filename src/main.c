@@ -5,6 +5,14 @@
 int yyparse(void);
 
 int main(void) {
-    yyparse();
+    while (1) {
+        printf("> ");
+        fflush(stdout);
+
+         if (yyparse() != 0) {
+            // parse error
+        }
+        
+    }
     return 0;
 }

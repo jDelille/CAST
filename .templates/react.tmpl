@@ -1,14 +1,4 @@
 // # This is a comment 
-
-// app/page.tsx
-export default function [COMPONENT_NAME=Component]() {
-  return (
-    <[ELEMENT=div] className="[CLASS_NAME=container]">
-      Hello world
-    </[ELEMENT=div]>
-  );
-}
-
 // # dynamic component class 
 // # allow same name to appear in many places, default only first one, only appear on first 
 // # unique variable name could be used multiple times 
@@ -20,54 +10,29 @@ export default function [COMPONENT_NAME=Component]() {
 // # make one projects folder, create projects in that folder 
 // # //a/b/c/b.txt/
 
-// app//components/button.tsx
-export default function [COMPONENT_NAME]() {
-  return (
-    <[ELEMENT] className="[CLASS_NAME]">
-      Submit
-    </[ELEMENT]>
-  );
-}
+// app/page.tsx
+   export default function [COMPONENT_NAME=Component]() {
+      return (
+        <[ELEMENT=div] className="[CLASS_NAME=container]">
+          Hello world
+        </[ELEMENT=div]>
+      );
+    }
 
-// app//components/navbar.tsx
-export default function [NAV_COMPONENT_NAME]() {
-  return (
-    <[ELEMENT_NAV] className="[NAV_CLASS_NAME]">
-      [NAV_COMPONENT_NAME]
-    </[ELEMENT_NAV]>
-  );
-}
-
-// app//components/navbar.scss
-.[CLASS_NAME=.] {
-  display: flex;
-  align-items: center;
-}
+// app/components/Button.tsx
+   export default function [COMPONENT_NAME=Component]() {
+      return (
+        <[ELEMENT=div] className="[CLASS_NAME=container]">
+          Hello world
+        </[ELEMENT=div]>
+      );
+    }
 
 
 // styles/globals.scss
-* {
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
-}
+
 
 // README.md
 
 // .gitignore
 **/node_modules/
-
-// # COMPONENTS
-
-// # Dependencies
-
-next
-react
-react-dom
-scss
-
-// # DevDependencies
-typescript
-@types/react

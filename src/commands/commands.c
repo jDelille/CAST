@@ -37,7 +37,7 @@ void clear_terminal_cmd() {
 
 void create_directory(const char *dir_name) {
     if (mkdir(dir_name, 0755) == -1) {
-        if (errno != EEXIST) {  // Only show an error if the directory doesn't already exist
+        if (errno != EEXIST) {  
             perror("Error creating directory");
             return;
         }
@@ -49,7 +49,7 @@ void create_directory(const char *dir_name) {
 void change_directory(const char *dir_name) {
     if (chdir(dir_name) == -1) {
         perror("Error changing directory");
-        return;  // Instead of exiting, we just return to allow the program to continue
+        return;  
     } else {
         printf("Changed directory to: %s\n", dir_name);
     }

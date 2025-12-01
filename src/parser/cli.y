@@ -19,9 +19,8 @@ void yyerror(const char *s);
 %%
 
 commands:
-      /* empty */                /* allow empty input */
-    | command commands           /* multiple commands */
-    | NEWLINE commands           /* allow blank lines between commands */
+    | command { printf("> "); fflush(stdout); } commands
+    | NEWLINE { printf("> "); fflush(stdout); } commands
 ;
 
 command:
@@ -35,7 +34,7 @@ command:
 ;
 
 install_template: 
-    INSTALL TEMPLATE STRING { install_template_cmd($3); }
+    INSTALL TEMPLATE STRING { install_template_cmd($3);  }
 
 create_project:
     CREATE PROJECT { create_project_cmd(); }
