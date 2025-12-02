@@ -20,6 +20,7 @@ void convert_windows_path_to_wsl(char *file_path);
 
 bool file_exists(const char *file_path);
 bool ensure_template_dir_exists(void);
+bool ensure_projects_dir_exists(void);
 bool copy_file(const char *src_path, const char *dst_path);
 bool directory_exists(const char *dir_name) ;
 

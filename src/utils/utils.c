@@ -112,6 +112,10 @@ bool ensure_template_dir_exists(void)
     return access(".templates", F_OK) == 0 || mkdir(".templates", 0700) == 0;
 }
 
+bool ensure_projects_dir_exists(void) {
+    return access("projects", F_OK) == 0 || mkdir("projects", 0700) == 0;
+}
+
 bool copy_file(const char *src_path, const char *dst_path)
 {
 

@@ -15,6 +15,7 @@
 #define MAX_GLOBAL_PLACEHOLDERS 128
 #define MAX_PENDING_FILES 256
 
+
 typedef struct
 {
     char path[512];
@@ -338,14 +339,22 @@ void generate_project_from_template(const char *templateName, const char *projec
         return;
     }
 
-    mkdir(projectName, 0755);
+    char project_path[512];
+    snprintf(project_path, sizeof(project_path), "projects/%s", projectName);
+
+    struct stat st;
+    if (stat("projects", &st) != 0) {
+        mkdir("projects", 0755);
+    }
+    
+    mkdir(project_path, 0755);
 
     char line[1024];
     Placeholder global_placeholders[MAX_GLOBAL_PLACEHOLDERS];
     int global_count = 0;
     file_count = 0;
 
-    // --- Phase 1: scan all files and placeholders ---
+    // scan all files and placeholders
     while (fgets(line, sizeof(line), templateFile))
     {
         if (strncmp(line, "//", 2) == 0)
@@ -358,8 +367,8 @@ void generate_project_from_template(const char *templateName, const char *projec
         while (*file_path == ' ')
             file_path++;
 
-        char full_path[512];
-        snprintf(full_path, sizeof(full_path), "%s/%s", projectName, file_path);
+        char full_path[1024];
+        snprintf(full_path, sizeof(full_path), "%s/%s", project_path, file_path);
         full_path[strcspn(full_path, "\r\n")] = 0;
 
         ensure_parent_dirs(full_path);
@@ -367,12 +376,10 @@ void generate_project_from_template(const char *templateName, const char *projec
         long section_start = ftell(templateFile);
         char section_line[1024];
 
-        // Store file for later creation
         strncpy(files[file_count].path, full_path, sizeof(files[file_count].path));
         files[file_count].section_start = section_start;
         file_count++;
 
-        // Scan for placeholders in file content
         while (fgets(section_line, sizeof(section_line), templateFile))
         {
             if (strncmp(section_line, "--", 2) == 0)
@@ -445,7 +452,7 @@ void generate_project_from_template(const char *templateName, const char *projec
         }
     }
 
-    // --- Phase 2: prompt user for placeholders ---
+    // prompt user for placeholders
     if (customize)
     {
         printf("\n");
@@ -453,7 +460,7 @@ void generate_project_from_template(const char *templateName, const char *projec
         {
             if (!global_placeholders[i].filled)
             {
-                printf("%s (default: %s): ", global_placeholders[i].key, global_placeholders[i].default_value);
+                printf("%s [%s]: ", global_placeholders[i].key, global_placeholders[i].default_value);
                 char input[128];
                 fgets(input, sizeof(input), stdin);
                 input[strcspn(input, "\n")] = 0;
@@ -462,10 +469,9 @@ void generate_project_from_template(const char *templateName, const char *projec
                 global_placeholders[i].filled = true;
             }
         }
-        printf("\n");
     }
 
-    // --- Phase 3: generate all files ---
+    // generate all files
     const char *key_ptrs[MAX_GLOBAL_PLACEHOLDERS];
     const char *replacement_ptrs[MAX_GLOBAL_PLACEHOLDERS];
     for (int i = 0; i < global_count; i++)
@@ -473,6 +479,8 @@ void generate_project_from_template(const char *templateName, const char *projec
         key_ptrs[i] = global_placeholders[i].key;
         replacement_ptrs[i] = global_placeholders[i].value;
     }
+
+    printf("\n");
 
     for (int i = 0; i < file_count; i++)
     {

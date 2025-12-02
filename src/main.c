@@ -5,8 +5,9 @@
 int yyparse(void);
 
 int main(void) {
+    clear_terminal_cmd();
     while (1) {
-        printf("> ");
+        print_prompt();
         yyparse();
     }
     return 0;

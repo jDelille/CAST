@@ -13,14 +13,14 @@ void yyerror(const char *s);
     char *string;
 }
 
-%token CREATE PROJECT INSTALL TEMPLATE COPY DELETE CLEAR GOTO VIEW RECOVER EMPTY TRASH
+%token CREATE PROJECT INSTALL TEMPLATE COPY DELETE CLEAR GOTO VIEW RECOVER EMPTY TRASH HELP
 %token <string> IDENTIFIER STRING
 %token NEWLINE
 
 %%
 
 commands:
-    | command { printf("> "); fflush(stdout); } commands
+    | command { print_prompt(); fflush(stdout); } commands
     | NEWLINE commands
 ;
 
@@ -35,6 +35,7 @@ command:
     | delete_file_command NEWLINE 
     | recover_file_command NEWLINE
     | empty_trash NEWLINE
+    | help_command NEWLINE
 ;
 
 install_template: 
@@ -77,6 +78,10 @@ recover_file_command:
 
 empty_trash:
     EMPTY TRASH { empty_trash(); }
+;
+
+help_command:
+    HELP { show_help(); }
 ;
 
 %%

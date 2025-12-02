@@ -8,11 +8,13 @@
 #include <errno.h>
 #include <dirent.h>
 #include <ftw.h>
+#include <limits.h> 
 
 #include "../scaffold/scaffold.h"
 #include "../template/template.h"
 #include "../utils/utils.h"
 #include "../utils/selection.h"
+#include "../utils/defs.h"
 
 void create_project_cmd()
 {
@@ -66,7 +68,7 @@ void change_directory(const char *dir_name)
     }
     else
     {
-        printf("Changed directory to: %s\n", dir_name);
+        // printf("Changed directory to: %s\n", dir_name);
     }
 }
 
@@ -186,6 +188,28 @@ void empty_trash()
     {
         puts("Trash emptied.");
     }
+}
+
+const char *ROOT_FOLDER = "/mnt/c/Users/justi/Desktop/raft";
+
+void print_prompt()
+{
+    char cwd[PATH_MAX];
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+        if (strncmp(cwd, ROOT_FOLDER, strlen(ROOT_FOLDER)) == 0) {
+            // Show relative path from 'raft', include 'raft' itself
+            const char *relative = cwd + strlen("/mnt/c/Users/justi/Desktop/"); // start at "raft"
+            printf("%s%s> %s", STYLE_CYAN_BLUE, relative, STYLE_RESET);
+
+        } else {
+            // Outside of root
+            printf("%s%s> %s", STYLE_CYAN_BLUE, cwd, STYLE_RESET);
+        }
+    } else {
+        perror("getcwd failed");
+        printf("> ");
+    }
+    fflush(stdout);
 }
 
 /**

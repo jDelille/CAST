@@ -17,6 +17,7 @@ UTIL_SRCS := $(wildcard src/utils/*.c)
 # Source files
 SRCS := src/main.c \
         src/commands/commands.c \
+		src/commands/helpcommand.c \
         src/scaffold/scaffold.c \
         src/template/template.c \
         $(UTIL_SRCS) \

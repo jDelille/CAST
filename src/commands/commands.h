@@ -11,5 +11,7 @@ void view_cmd(const char *path);
 void delete_file_cmd(char *filename);
 void recover_file_cmd(const char *filename);
 void empty_trash(); 
+void print_prompt();
+void show_help();
 
 #endif 
