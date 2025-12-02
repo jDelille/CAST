@@ -63,9 +63,12 @@ extern int yydebug;
     CLEAR = 264,                   /* CLEAR  */
     GOTO = 265,                    /* GOTO  */
     VIEW = 266,                    /* VIEW  */
-    IDENTIFIER = 267,              /* IDENTIFIER  */
-    STRING = 268,                  /* STRING  */
-    NEWLINE = 269                  /* NEWLINE  */
+    RECOVER = 267,                 /* RECOVER  */
+    EMPTY = 268,                   /* EMPTY  */
+    TRASH = 269,                   /* TRASH  */
+    IDENTIFIER = 270,              /* IDENTIFIER  */
+    STRING = 271,                  /* STRING  */
+    NEWLINE = 272                  /* NEWLINE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -74,11 +77,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 11 "src/parser/cli.y"
+#line 12 "src/parser/cli.y"
 
     char *string;
 
-#line 82 "build/cli.tab.h"
+#line 85 "build/cli.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

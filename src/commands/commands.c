@@ -55,20 +55,31 @@ void change_directory(const char *dir_name) {
     }
 }
 
-void cd_cmd(const char *project_folder) {
-  if (strcmp(project_folder, ".") != 0 && strcmp(project_folder, "..") != 0) {
-        if (!directory_exists(project_folder)) {
+void cd_cmd(const char *input_path) {
+    char path[512];
+    strncpy(path, input_path, sizeof(path));
+    path[sizeof(path)-1] = '\0';
+
+    convert_windows_path_to_wsl(path);
+
+    if (!directory_exists(path)) {
+        if (path[0] != '/') { 
             const char *yes_no[] = {"Yes", "No"};
-            int install_choice = (selection("Directory does not exist. Do you want to create one?", yes_no, 2) == 0);
+            int install_choice = (selection(
+                "Directory does not exist. Do you want to create one?", 
+                yes_no, 2) == 0);
             if (install_choice) {
-                create_directory(project_folder); 
+                create_directory(path); 
             } else {
                 return;
             }
+        } else {
+            printf("Directory does not exist: %s\n", path);
+            return;
         }
     }
 
-    change_directory(project_folder);
+    change_directory(path);
 }
 
 void view_cmd(const char *path) {
@@ -86,6 +97,62 @@ void view_cmd(const char *path) {
     closedir(d);
 }
 
+void delete_file_cmd(char *filename) {
+    mkdir(".trash", 0700);
+
+    char trash_path[512];
+    snprintf(trash_path, sizeof(trash_path) ,".trash/%s", filename);
+
+    if (rename(filename, trash_path) == 0) {
+        printf("Moved %s to the trash\n", filename);
+        fflush(stdout);
+    } else {
+        perror("Error deleting file\n");
+    }
+}
+
+void recover_file_cmd(const char *filename) {
+    char trash_path[512];
+    snprintf(trash_path, sizeof(trash_path), ".trash/%s", filename);
+
+    if (access(trash_path, F_OK) != 0) {
+        printf("File %s not found in .trash\n", filename);
+        return;
+    }
+
+    if (rename(trash_path, filename) == 0) {
+        printf("Recovered file: %s\n", filename);
+        fflush(stdout);
+    } else {
+        perror("Error recovering file.\n");
+    }
+}
+
+void empty_trash() {
+    DIR *dir = opendir(".trash");
+    if (!dir) {
+        perror("Error opening .trash");
+        return;
+    }
+
+    struct dirent *entry;
+    char filepath[512];
+
+    while ((entry = readdir(dir))) {
+        if (entry->d_name[0] == '.') {
+            continue;
+        }
+
+        snprintf(filepath, sizeof(filepath), ".trash/%s", entry->d_name);
+
+        if (remove(filepath) != 0) {
+            perror("Error deleting file");
+        }
+    }
+
+    closedir(dir);
+    puts("Trash emptied.");
+}
 
 /**
  * Add download & upload template commands

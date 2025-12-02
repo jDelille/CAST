@@ -24,7 +24,6 @@ typedef struct {
 
 void install_template(const char *template_path)
 {
-    // Copy path and convert path to wsl
     char converted_path[512];
     snprintf(converted_path, sizeof(converted_path), "%s", template_path);
     convert_windows_path_to_wsl(converted_path);
@@ -42,7 +41,6 @@ void install_template(const char *template_path)
 
     char *filename = get_filename(converted_path);
 
-    // Build destination path inside .templates folder
     char destination_path[512];
     snprintf(destination_path, sizeof(destination_path), ".templates/%s", filename);
     free(filename);
@@ -72,18 +70,15 @@ const char *get_placeholder(
 
 void create_dir_from_line(const char *line, const char *projectName)
 {
-    // Skip leading slashes and spaces
     const char *dir_name = line;
     while (*dir_name == '/' || *dir_name == ' ')
         dir_name++;
 
-    // Skip empty lines
     if (*dir_name == '\0')
         return;
 
     size_t dir_length = strlen(dir_name);
 
-    // Not a directory, skip
     if (dir_name[dir_length - 1] != '/')
     {
         return;
@@ -117,7 +112,6 @@ void create_file_from_line(
 
     while (fgets(input_line, sizeof(input_line), template_fp))
     {
-        // Stop at next file section
         if (strncmp(input_line, "-- ", 3) == 0)
         {
             fseek(template_fp, -strlen(input_line), SEEK_CUR);
@@ -137,8 +131,7 @@ void create_file_from_line(
 
     fclose(output_fp);
 
-    // Ensure the file has normal permissions
-    chmod(output_path, 0644); // owner rw, group r, others r
+    chmod(output_path, 0644); 
 }
 
 int extract_placeholders_from_template(
@@ -178,7 +171,6 @@ int extract_placeholders_from_template(
             strncpy(content, cursor + 1, content_len);
             content[content_len] = '\0';
 
-            // Split into key and default value
             char *equal_sign = strchr(content, '=');
             char key[128] = "";
             char default_value[128] = "";
@@ -195,11 +187,9 @@ int extract_placeholders_from_template(
                 default_value[0] = '\0';
             }
 
-            // Trim whitespace
             key[strcspn(key, " \r\n\t")] = 0;
             default_value[strcspn(default_value, " \r\n\t")] = 0;
 
-            // Skip empty keys
             if (strlen(key) == 0)
             {
                 cursor = end_bracket + 1;
@@ -300,7 +290,6 @@ void delete_template()
             return;
         }
 
-        // Build template name array (+1 for "Quit")
         const char *template_names[65];
         for (int i = 0; i < num_templates; i++)
         {
@@ -310,7 +299,6 @@ void delete_template()
 
         int selected = selection("Which template do you want to delete?", template_names, num_templates + 1);
 
-        // Handle Quit
         if (selected == num_templates || selected < 0)
         {
             printf("Exiting template deletion.\n");
@@ -319,14 +307,13 @@ void delete_template()
 
         const char *selected_template = template_names[selected];
 
-        // Confirmation prompt
         const char *yes_no[] = {"Yes", "No"};
         int confirm = selection("Are you sure you want to delete this template?", yes_no, 2);
 
-        if (confirm != 0) // 0 = "Yes", 1 = "No"
+        if (confirm != 0) 
         {
             printf("Deletion canceled.\n");
-            continue; // back to main loop
+            continue; 
         }
 
         char path[512];
@@ -341,7 +328,7 @@ void delete_template()
             perror("Error deleting template");
         }
 
-        printf("\n"); // visual spacing before next loop
+        printf("\n"); 
     }
 }
 
@@ -357,12 +344,10 @@ void generate_project_from_template(const char *templateName, const char *projec
         return;
     }
 
-    // Create root project folder
     mkdir(projectName, 0755);
 
     char line[1024];
 
-    // --- Global placeholder storage ---
     Placeholder global_placeholders[MAX_GLOBAL_PLACEHOLDERS];
     int global_count = 0;
 
@@ -375,24 +360,21 @@ void generate_project_from_template(const char *templateName, const char *projec
         if (strncmp(line, "--", 2) != 0)
             continue;
 
-        const char *file_path = line + 2; // skip leading //
-        while (*file_path == ' ') file_path++; // skip spaces
+        const char *file_path = line + 2; 
+        while (*file_path == ' ') file_path++; 
 
         char full_path[512];
         snprintf(full_path, sizeof(full_path), "%s/%s", projectName, file_path);
-        full_path[strcspn(full_path, "\r\n")] = 0; // remove newline
+        full_path[strcspn(full_path, "\r\n")] = 0; 
 
-        // Ensure all parent directories exist
         ensure_parent_dirs(full_path);
 
         printf("\nCreating file: %s\n", full_path);
 
-        // Get the file name
         const char *file_name = strrchr(full_path, '/');
         if (file_name) file_name++;
         else file_name = full_path;
 
-        // --- Scan file section for placeholders ---
         long section_start = ftell(templateFile);
         char section_line[1024];
 

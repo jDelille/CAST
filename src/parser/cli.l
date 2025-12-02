@@ -21,6 +21,9 @@ void yyerror(const char *s);
 "clear"         { return CLEAR; }
 "goto"          { return GOTO; }
 "view"          { return VIEW; }
+"recover"       { return RECOVER; }
+"empty"         { return EMPTY; }
+"trash"         { return TRASH; }
 
 [a-zA-Z_./][a-zA-Z0-9_./]* {
     yylval.string = strdup(yytext);

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "cli.tab.h"
 #include "commands/commands.h"
+#include "utils/utils.h"
 
 int yylex(void);
 void yyerror(const char *s);
@@ -12,7 +13,7 @@ void yyerror(const char *s);
     char *string;
 }
 
-%token CREATE PROJECT INSTALL TEMPLATE COPY DELETE CLEAR GOTO VIEW
+%token CREATE PROJECT INSTALL TEMPLATE COPY DELETE CLEAR GOTO VIEW RECOVER EMPTY TRASH
 %token <string> IDENTIFIER STRING
 %token NEWLINE
 
@@ -20,7 +21,7 @@ void yyerror(const char *s);
 
 commands:
     | command { printf("> "); fflush(stdout); } commands
-    | NEWLINE { printf("> "); fflush(stdout); } commands
+    | NEWLINE commands
 ;
 
 command:
@@ -31,10 +32,14 @@ command:
     | clear_terminal NEWLINE
     | cd_command NEWLINE
     | view_command NEWLINE
+    | delete_file_command NEWLINE 
+    | recover_file_command NEWLINE
+    | empty_trash NEWLINE
 ;
 
 install_template: 
     INSTALL TEMPLATE STRING { install_template_cmd($3);  }
+;
 
 create_project:
     CREATE PROJECT { create_project_cmd(); }
@@ -54,11 +59,24 @@ clear_terminal:
 
 cd_command: 
     GOTO IDENTIFIER { cd_cmd($2); }
+  | GOTO STRING     { cd_cmd($2); }
 ;
 
 view_command:
     VIEW { view_cmd("."); }
   | VIEW IDENTIFIER { view_cmd($2); }
+;
+
+delete_file_command:
+    DELETE IDENTIFIER { delete_file_cmd($2); }
+;
+
+recover_file_command:
+    RECOVER IDENTIFIER { recover_file_cmd($2); }
+;
+
+empty_trash:
+    EMPTY TRASH { empty_trash(); }
 ;
 
 %%

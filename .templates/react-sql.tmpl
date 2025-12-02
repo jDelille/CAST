@@ -4,7 +4,7 @@
 import Navbar from "./components/navbar/Navbar"
   export default function [COMPONENT_NAME=Page]() {
     return (
-      <div className="page">
+      <div className=[CLASS_NAME]>
         <Navbar />
       </div>
     );
@@ -14,11 +14,11 @@ import Navbar from "./components/navbar/Navbar"
 import React from "react";
 import Button from "../reusable/button/Button"
 
-  type NavbarProps = {
+  type [NAV_COMPONENT]Props = {
     isAuthPage?: boolean;
   };
 
-  const Navbar: React.FC<NavbarProps> = ({isAuthPage}) => {
+  const [NAV_COMPONENT]: React.FC<[NAV_COMPONENT]Props> = ({isAuthPage}) => {
 
     const handleClick = () => {
       console.log("Clicked...");
@@ -34,7 +34,7 @@ import Button from "../reusable/button/Button"
     );
   }
 
-  export default Navbar;
+  export default [NAV_COMPONENT];
 
 -- app/components/reusable/button/Button.tsx 
 import React from "react";
@@ -67,4 +67,4 @@ import React from "react";
   **/node_modules/
 
 -- README.md
-  This is a scaffolded project created with BEAM CLI.
+  This is a project created with BEAM CLI.
