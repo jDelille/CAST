@@ -2,23 +2,23 @@
 
 -- app/Page.tsx
 import Navbar from "./components/navbar/Navbar"
-  export default function [COMPONENT_NAME=Page]() {
+  export default function [PAGE_COMPONENT=Page]() {
     return (
-      <div className=[CLASS_NAME]>
-        <Navbar />
+      <div className=[PAGE_CLASSNAME="page"]>
+        <[NAVBAR_COMPONENT=Navbar] />
       </div>
     );
   }
 
 -- app/components/navbar/Navbar.tsx
 import React from "react";
-import Button from "../reusable/button/Button"
+import [BUTTON_COMPONENT=Button] from "../reusable/button/Button"
 
-  type [NAV_COMPONENT]Props = {
+  type [NAVBAR_COMPONENT]Props = {
     isAuthPage?: boolean;
   };
 
-  const [NAV_COMPONENT]: React.FC<[NAV_COMPONENT]Props> = ({isAuthPage}) => {
+  const [NAVBAR_COMPONENT]: React.FC<[NAVBAR_COMPONENT]Props> = ({isAuthPage}) => {
 
     const handleClick = () => {
       console.log("Clicked...");
@@ -29,22 +29,22 @@ import Button from "../reusable/button/Button"
         <div className="logo">
           <img src="" alt="" />
         </div>
-        <Button text={isAuthPage ? "Login" : "Signup"} onClick={handleClick} />
+        <[BUTTON_COMPONENT] text={isAuthPage ? "Login" : "Signup"} onClick={handleClick} />
       </nav>
     );
   }
 
-  export default [NAV_COMPONENT];
+  export default [NAVBAR_COMPONENT];
 
 -- app/components/reusable/button/Button.tsx 
 import React from "react";
 
-  type ButtonProps = {
+  type [BUTTON_COMPONENT]Props = {
     text: string;
     onClick: () => void;
   };
 
-  const Button: React.FC<ButtonProps> = ({text, onClick}) => {
+  const [BUTTON_COMPONENT]: React.FC<[BUTTON_COMPONENT]Props> = ({text, onClick}) => {
     return (
       <button className="button" onClick={onClick}>
         <span>{text}</span>
@@ -52,7 +52,7 @@ import React from "react";
     );
   }
 
-  export default Button;
+  export default [BUTTON_COMPONENT];
 
 -- styles/globals.scss
   * {

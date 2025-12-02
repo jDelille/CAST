@@ -13,14 +13,26 @@
 #include "../scaffold/scaffold.h"
 
 #define MAX_GLOBAL_PLACEHOLDERS 128
+#define MAX_PENDING_FILES 256
 
-typedef struct {
+typedef struct
+{
+    char path[512];
+    long section_start;
+} PendingFile;
+
+typedef struct
+{
     char key[128];
     char value[128];
     char default_value[128];
-    bool filled; 
+    bool filled;
     char file_name[256];
 } Placeholder;
+
+// Global arrays
+PendingFile files[MAX_PENDING_FILES];
+int file_count = 0;
 
 void install_template(const char *template_path)
 {
@@ -29,9 +41,7 @@ void install_template(const char *template_path)
     convert_windows_path_to_wsl(converted_path);
 
     if (!ensure_template_dir_exists())
-    {
         return;
-    }
 
     if (!file_exists(converted_path))
     {
@@ -50,6 +60,7 @@ void install_template(const char *template_path)
         printf("Template already exists: %s\n", destination_path);
         return;
     }
+
     if (copy_file(converted_path, destination_path))
         printf("Installed template: %s\n", destination_path);
 }
@@ -61,10 +72,12 @@ const char *get_placeholder(
     int num_placeholders)
 {
     for (int i = 0; i < num_placeholders; i++)
-        if (strcmp(placeholder_name, placeholder_keys[i]) == 0) {
+    {
+        if (strcmp(placeholder_name, placeholder_keys[i]) == 0)
+        {
             return placeholder_values[i];
         }
-            
+    }
     return "";
 }
 
@@ -80,9 +93,7 @@ void create_dir_from_line(const char *line, const char *projectName)
     size_t dir_length = strlen(dir_name);
 
     if (dir_name[dir_length - 1] != '/')
-    {
         return;
-    }
 
     char path[512];
     snprintf(path, sizeof(path), "%s/%.*s", projectName, (int)(dir_length - 1), dir_name); // remove trailing /
@@ -131,7 +142,7 @@ void create_file_from_line(
 
     fclose(output_fp);
 
-    chmod(output_path, 0644); 
+    chmod(output_path, 0644);
 }
 
 int extract_placeholders_from_template(
@@ -196,7 +207,6 @@ int extract_placeholders_from_template(
                 continue;
             }
 
-            // Avoid duplicates
             bool already_exists = false;
             for (int i = 0; i < placeholder_count; i++)
             {
@@ -226,20 +236,18 @@ int extract_placeholders_from_template(
 void copy_template()
 {
     char templates_list[64][256];
-
     int num_templates = list_templates(templates_list, 64);
+
+    if (num_templates <= 0)
+        return;
 
     const char *template_names[64];
     for (int i = 0; i < num_templates; i++)
-    {
         template_names[i] = templates_list[i];
-    }
-    int template_selection = selection("Which template do you want to copy?", template_names, num_templates);
 
+    int template_selection = selection("Which template do you want to copy?", template_names, num_templates);
     if (template_selection < 0)
-    {
         return;
-    }
 
     const char *filename = template_names[template_selection];
     char src_path[512];
@@ -254,14 +262,8 @@ void copy_template()
     }
 
     new_name[sizeof(new_name) - 1] = '\0';
-    if (strlen(new_name) > 200)
-    {
-        printf("Error: template name too long.\n");
-        return;
-    }
 
     char dest_path[1024];
-
     snprintf(dest_path, sizeof(dest_path), ".templates/%s.tmpl", new_name);
 
     if (file_exists(dest_path))
@@ -292,13 +294,10 @@ void delete_template()
 
         const char *template_names[65];
         for (int i = 0; i < num_templates; i++)
-        {
             template_names[i] = templates_list[i];
-        }
         template_names[num_templates] = "Quit";
 
         int selected = selection("Which template do you want to delete?", template_names, num_templates + 1);
-
         if (selected == num_templates || selected < 0)
         {
             printf("Exiting template deletion.\n");
@@ -306,40 +305,35 @@ void delete_template()
         }
 
         const char *selected_template = template_names[selected];
-
         const char *yes_no[] = {"Yes", "No"};
         int confirm = selection("Are you sure you want to delete this template?", yes_no, 2);
 
-        if (confirm != 0) 
+        if (confirm != 0)
         {
             printf("Deletion canceled.\n");
-            continue; 
+            continue;
         }
 
         char path[512];
         snprintf(path, sizeof(path), ".templates/%s", selected_template);
-
         if (remove(path) == 0)
-        {
             printf("Template '%s' deleted successfully.\n", selected_template);
-        }
         else
-        {
             perror("Error deleting template");
-        }
 
-        printf("\n"); 
+        printf("\n");
     }
 }
 
-/* Generate a new file from a template */
+/* Generate a new project from a template */
 void generate_project_from_template(const char *templateName, const char *projectName, bool customize)
 {
     char templatePath[512];
     snprintf(templatePath, sizeof(templatePath), "/mnt/c/Users/justi/Desktop/raft/.templates/%s", templateName);
 
     FILE *templateFile = fopen(templatePath, "r");
-    if (!templateFile) {
+    if (!templateFile)
+    {
         printf("Template open failed: %s\n", templatePath);
         return;
     }
@@ -347,51 +341,57 @@ void generate_project_from_template(const char *templateName, const char *projec
     mkdir(projectName, 0755);
 
     char line[1024];
-
     Placeholder global_placeholders[MAX_GLOBAL_PLACEHOLDERS];
     int global_count = 0;
+    file_count = 0;
 
-    while (fgets(line, sizeof(line), templateFile)) {
-        // Skip comment headers //
-        if (strncmp(line, "//", 4) == 0)
+    // --- Phase 1: scan all files and placeholders ---
+    while (fgets(line, sizeof(line), templateFile))
+    {
+        if (strncmp(line, "//", 2) == 0)
             continue;
 
-        // Only process file lines starting with //
         if (strncmp(line, "--", 2) != 0)
             continue;
 
-        const char *file_path = line + 2; 
-        while (*file_path == ' ') file_path++; 
+        const char *file_path = line + 2;
+        while (*file_path == ' ')
+            file_path++;
 
         char full_path[512];
         snprintf(full_path, sizeof(full_path), "%s/%s", projectName, file_path);
-        full_path[strcspn(full_path, "\r\n")] = 0; 
+        full_path[strcspn(full_path, "\r\n")] = 0;
 
         ensure_parent_dirs(full_path);
-
-        printf("\nCreating file: %s\n", full_path);
-
-        const char *file_name = strrchr(full_path, '/');
-        if (file_name) file_name++;
-        else file_name = full_path;
 
         long section_start = ftell(templateFile);
         char section_line[1024];
 
-        while (fgets(section_line, sizeof(section_line), templateFile)) {
-            if (strncmp(section_line, "--", 2) == 0) {
+        // Store file for later creation
+        strncpy(files[file_count].path, full_path, sizeof(files[file_count].path));
+        files[file_count].section_start = section_start;
+        file_count++;
+
+        // Scan for placeholders in file content
+        while (fgets(section_line, sizeof(section_line), templateFile))
+        {
+            if (strncmp(section_line, "--", 2) == 0)
+            {
                 fseek(templateFile, -strlen(section_line), SEEK_CUR);
                 break;
             }
 
             const char *cursor = section_line;
-            while ((cursor = strchr(cursor, '[')) != NULL) {
+            while ((cursor = strchr(cursor, '[')) != NULL)
+            {
                 const char *end_bracket = strchr(cursor, ']');
-                if (!end_bracket) break;
+                if (!end_bracket)
+                    break;
 
                 char content[256];
                 size_t len = end_bracket - cursor - 1;
-                if (len >= sizeof(content)) len = sizeof(content) - 1;
+                if (len >= sizeof(content))
+                    len = sizeof(content) - 1;
                 strncpy(content, cursor + 1, len);
                 content[len] = '\0';
 
@@ -399,11 +399,14 @@ void generate_project_from_template(const char *templateName, const char *projec
                 char key[128] = "";
                 char default_val[128] = "";
 
-                if (equal_sign) {
+                if (equal_sign)
+                {
                     *equal_sign = '\0';
                     strncpy(key, content, sizeof(key));
                     strncpy(default_val, equal_sign + 1, sizeof(default_val));
-                } else {
+                }
+                else
+                {
                     strncpy(key, content, sizeof(key));
                     default_val[0] = '\0';
                 }
@@ -411,22 +414,25 @@ void generate_project_from_template(const char *templateName, const char *projec
                 key[strcspn(key, " \r\n\t")] = 0;
                 default_val[strcspn(default_val, " \r\n\t")] = 0;
 
-                if (strlen(key) == 0) {
+                if (strlen(key) == 0)
+                {
                     cursor = end_bracket + 1;
                     continue;
                 }
 
-                // Check global placeholders
+                // Add to global placeholders if not exists
                 bool exists = false;
-                for (int i = 0; i < global_count; i++) {
-                    if (strcmp(global_placeholders[i].key, key) == 0) {
+                for (int i = 0; i < global_count; i++)
+                {
+                    if (strcmp(global_placeholders[i].key, key) == 0)
+                    {
                         exists = true;
                         break;
                     }
                 }
 
-                // Only store first default
-                if (!exists && global_count < MAX_GLOBAL_PLACEHOLDERS) {
+                if (!exists && global_count < MAX_GLOBAL_PLACEHOLDERS)
+                {
                     strncpy(global_placeholders[global_count].key, key, sizeof(global_placeholders[0].key));
                     strncpy(global_placeholders[global_count].default_value, default_val, sizeof(global_placeholders[0].default_value));
                     strncpy(global_placeholders[global_count].value, default_val, sizeof(global_placeholders[0].value));
@@ -437,33 +443,49 @@ void generate_project_from_template(const char *templateName, const char *projec
                 cursor = end_bracket + 1;
             }
         }
+    }
 
-        // Prompt user once per placeholder
-        if (customize) {
-            for (int i = 0; i < global_count; i++) {
-                if (!global_placeholders[i].filled) {
-                    printf("Component name for %s (default: %s): ", file_name, global_placeholders[i].default_value);
-                    char input[128];
-                    fgets(input, sizeof(input), stdin);
-                    input[strcspn(input, "\n")] = 0;
-                    if (strlen(input) > 0)
-                        strncpy(global_placeholders[i].value, input, sizeof(global_placeholders[i].value));
-                    global_placeholders[i].filled = true;
-                }
+    // --- Phase 2: prompt user for placeholders ---
+    if (customize)
+    {
+        printf("\n");
+        for (int i = 0; i < global_count; i++)
+        {
+            if (!global_placeholders[i].filled)
+            {
+                printf("%s (default: %s): ", global_placeholders[i].key, global_placeholders[i].default_value);
+                char input[128];
+                fgets(input, sizeof(input), stdin);
+                input[strcspn(input, "\n")] = 0;
+                if (strlen(input) > 0)
+                    strncpy(global_placeholders[i].value, input, sizeof(global_placeholders[i].value));
+                global_placeholders[i].filled = true;
             }
         }
+        printf("\n");
+    }
 
-        // Build pointer arrays for replacement
-        const char *replacement_ptrs[MAX_GLOBAL_PLACEHOLDERS];
-        const char *key_ptrs[MAX_GLOBAL_PLACEHOLDERS];
-        for (int i = 0; i < global_count; i++) {
-            replacement_ptrs[i] = global_placeholders[i].value;
-            key_ptrs[i] = global_placeholders[i].key;
-        }
+    // --- Phase 3: generate all files ---
+    const char *key_ptrs[MAX_GLOBAL_PLACEHOLDERS];
+    const char *replacement_ptrs[MAX_GLOBAL_PLACEHOLDERS];
+    for (int i = 0; i < global_count; i++)
+    {
+        key_ptrs[i] = global_placeholders[i].key;
+        replacement_ptrs[i] = global_placeholders[i].value;
+    }
 
-        // Generate file
-        fseek(templateFile, section_start, SEEK_SET);
-        create_file_from_line(templateFile, full_path, key_ptrs, replacement_ptrs, global_count);
+    for (int i = 0; i < file_count; i++)
+    {
+        printf("Creating file: %s\n", files[i].path);
+
+        fseek(templateFile, files[i].section_start, SEEK_SET);
+
+        create_file_from_line(
+            templateFile,
+            files[i].path,
+            key_ptrs,
+            replacement_ptrs,
+            global_count);
     }
 
     printf("\n🚀 Project %s created using the %s template\n\n", projectName, templateName);
