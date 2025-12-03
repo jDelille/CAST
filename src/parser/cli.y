@@ -13,7 +13,7 @@ void yyerror(const char *s);
     char *string;
 }
 
-%token CREATE PROJECT INSTALL TEMPLATE COPY DELETE CLEAR GOTO VIEW RECOVER EMPTY TRASH HELP
+%token CREATE PROJECT INSTALL TEMPLATE COPY DELETE CLEAR GOTO VIEW RECOVER EMPTY TRASH HELP RENAME
 %token <string> IDENTIFIER STRING
 %token NEWLINE
 
@@ -38,6 +38,7 @@ command:
     | help_command NEWLINE
     | copy_project NEWLINE
     | create_template NEWLINE
+    | rename_project NEWLINE
 ;
 
 install_template: 
@@ -89,6 +90,9 @@ help_command:
 copy_project:
     COPY PROJECT { copy_project_cmd(); }
 ;
+
+rename_project:
+    RENAME PROJECT { rename_project_cmd(); }
 
 create_template:
     CREATE TEMPLATE { create_template_cmd(); }

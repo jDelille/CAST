@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include "../utils/selection.h"
 
-// Reuse your existing functions
 bool is_directory(const char *path) {
     struct stat st;
     if (stat(path, &st) != 0)
@@ -37,7 +36,6 @@ int list_projects(char projects_list[][256], int max_projects) {
     return count;
 }
 
-// You also need a copy_folder() function that recursively copies folders/files
 bool copy_folder(const char *src_path, const char *dest_path) {
     struct stat st = {0};
     if (stat(dest_path, &st) == -1) {
@@ -130,4 +128,47 @@ void copy_project() {
     } else {
         printf("Failed to copy project.\n");
     }
+}
+
+void rename_project() {
+    char projects_list[64][256];
+    int num_projects = list_projects(projects_list, 64);
+
+    if (num_projects <= 0) {
+        printf("No projects found in the projects folder.\n");
+        return;
+    }
+
+     const char *project_names[64];
+    for (int i = 0; i < num_projects; i++)
+        project_names[i] = projects_list[i];
+
+    int selection_index = selection("Which project do you want to rename?", project_names, num_projects);
+    if (selection_index < 0) return;
+
+    const char *selected_project = project_names[selection_index];
+
+    char new_name[256];
+    printf("Enter a new name for the project '%s': ", selected_project);
+    if (scanf("%255s", new_name) != 1) {
+        printf("Invalid input.\n");
+        return;
+    }
+    new_name[255] = '\0';
+
+    char old_path[512], new_path[512];
+    snprintf(old_path, sizeof(old_path), "projects/%s", selected_project);
+    snprintf(new_path, sizeof(new_path), "projects/%s", new_name);
+
+    if (is_directory(new_path)) {
+        printf("Error: A project named '%s' already exists.\n", new_name);
+        return;
+    }
+
+    if (rename(old_path, new_path) == 0) {
+        printf("Project '%s' successfully renamed to '%s'.\n", selected_project, new_name);
+    } else {
+        perror("Failed to rename project");
+    }
+
 }

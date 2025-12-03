@@ -67,9 +67,10 @@ extern int yydebug;
     EMPTY = 268,                   /* EMPTY  */
     TRASH = 269,                   /* TRASH  */
     HELP = 270,                    /* HELP  */
-    IDENTIFIER = 271,              /* IDENTIFIER  */
-    STRING = 272,                  /* STRING  */
-    NEWLINE = 273                  /* NEWLINE  */
+    RENAME = 271,                  /* RENAME  */
+    IDENTIFIER = 272,              /* IDENTIFIER  */
+    STRING = 273,                  /* STRING  */
+    NEWLINE = 274                  /* NEWLINE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -82,7 +83,7 @@ union YYSTYPE
 
     char *string;
 
-#line 86 "build/cli.tab.h"
+#line 87 "build/cli.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -42,6 +42,10 @@ void copy_project_cmd() {
     copy_project();
 }
 
+void rename_project_cmd() {
+    rename_project();
+}
+
 void clear_terminal_cmd()
 {
     system("clear");
