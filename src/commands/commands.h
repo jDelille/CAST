@@ -16,5 +16,6 @@ void show_help();
 void copy_project_cmd();
 void create_template_cmd();
 void rename_project_cmd();
+void view_projects_cmd();
 
 #endif 

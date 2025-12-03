@@ -8,7 +8,7 @@
 #include <errno.h>
 #include <dirent.h>
 #include <ftw.h>
-#include <limits.h> 
+#include <limits.h>
 
 #include "../scaffold/scaffold.h"
 #include "../template/template.h"
@@ -38,11 +38,13 @@ void delete_template_cmd()
     delete_template();
 }
 
-void copy_project_cmd() {
+void copy_project_cmd()
+{
     copy_project();
 }
 
-void rename_project_cmd() {
+void rename_project_cmd()
+{
     rename_project();
 }
 
@@ -52,9 +54,27 @@ void clear_terminal_cmd()
     return;
 }
 
-void create_template_cmd() {
+void create_template_cmd()
+{
     create_template();
 }
+
+void view_projects_cmd()
+{
+    char projects_list[64][256];
+    int num_projects = list_projects(projects_list, 64);
+
+    if (num_projects == 0) {
+        printf("No projects found.\n");
+        return;
+    }
+
+    printf("Projects:\n");
+    for (int i = 0; i < num_projects; i++) {
+        printf("  %d. %s\n", i + 1, projects_list[i]);
+    }
+}
+
 
 void create_directory(const char *dir_name)
 {
@@ -180,8 +200,8 @@ void recover_file_cmd(const char *filename)
 
 int remove_callback(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf)
 {
-    (void)sb;       
-    (void)ftwbuf;  
+    (void)sb;
+    (void)ftwbuf;
 
     if (remove(fpath) != 0)
     {
@@ -208,15 +228,20 @@ const char *ROOT_FOLDER = "/mnt/c/Users/justi/Desktop/beam";
 void print_prompt()
 {
     char cwd[PATH_MAX];
-    if (getcwd(cwd, sizeof(cwd)) != NULL) {
-        if (strncmp(cwd, ROOT_FOLDER, strlen(ROOT_FOLDER)) == 0) {
+    if (getcwd(cwd, sizeof(cwd)) != NULL)
+    {
+        if (strncmp(cwd, ROOT_FOLDER, strlen(ROOT_FOLDER)) == 0)
+        {
             const char *relative = cwd + strlen("/mnt/c/Users/justi/Desktop/"); // start at "beam"
             printf("%s%s> %s", STYLE_CYAN_BLUE, relative, STYLE_RESET);
-
-        } else {
+        }
+        else
+        {
             printf("%s%s> %s", STYLE_CYAN_BLUE, cwd, STYLE_RESET);
         }
-    } else {
+    }
+    else
+    {
         perror("getcwd failed");
         printf("> ");
     }

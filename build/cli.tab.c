@@ -111,39 +111,41 @@ enum yysymbol_kind_t
   YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
   YYSYMBOL_CREATE = 3,                     /* CREATE  */
   YYSYMBOL_PROJECT = 4,                    /* PROJECT  */
-  YYSYMBOL_INSTALL = 5,                    /* INSTALL  */
-  YYSYMBOL_TEMPLATE = 6,                   /* TEMPLATE  */
-  YYSYMBOL_COPY = 7,                       /* COPY  */
-  YYSYMBOL_DELETE = 8,                     /* DELETE  */
-  YYSYMBOL_CLEAR = 9,                      /* CLEAR  */
-  YYSYMBOL_GOTO = 10,                      /* GOTO  */
-  YYSYMBOL_VIEW = 11,                      /* VIEW  */
-  YYSYMBOL_RECOVER = 12,                   /* RECOVER  */
-  YYSYMBOL_EMPTY = 13,                     /* EMPTY  */
-  YYSYMBOL_TRASH = 14,                     /* TRASH  */
-  YYSYMBOL_HELP = 15,                      /* HELP  */
-  YYSYMBOL_RENAME = 16,                    /* RENAME  */
-  YYSYMBOL_IDENTIFIER = 17,                /* IDENTIFIER  */
-  YYSYMBOL_STRING = 18,                    /* STRING  */
-  YYSYMBOL_NEWLINE = 19,                   /* NEWLINE  */
-  YYSYMBOL_YYACCEPT = 20,                  /* $accept  */
-  YYSYMBOL_commands = 21,                  /* commands  */
-  YYSYMBOL_22_1 = 22,                      /* $@1  */
-  YYSYMBOL_command = 23,                   /* command  */
-  YYSYMBOL_install_template = 24,          /* install_template  */
-  YYSYMBOL_create_project = 25,            /* create_project  */
-  YYSYMBOL_copy_template = 26,             /* copy_template  */
-  YYSYMBOL_delete_template = 27,           /* delete_template  */
-  YYSYMBOL_clear_terminal = 28,            /* clear_terminal  */
-  YYSYMBOL_cd_command = 29,                /* cd_command  */
-  YYSYMBOL_view_command = 30,              /* view_command  */
-  YYSYMBOL_delete_file_command = 31,       /* delete_file_command  */
-  YYSYMBOL_recover_file_command = 32,      /* recover_file_command  */
-  YYSYMBOL_empty_trash = 33,               /* empty_trash  */
-  YYSYMBOL_help_command = 34,              /* help_command  */
-  YYSYMBOL_copy_project = 35,              /* copy_project  */
-  YYSYMBOL_rename_project = 36,            /* rename_project  */
-  YYSYMBOL_create_template = 37            /* create_template  */
+  YYSYMBOL_PROJECTS = 5,                   /* PROJECTS  */
+  YYSYMBOL_INSTALL = 6,                    /* INSTALL  */
+  YYSYMBOL_TEMPLATE = 7,                   /* TEMPLATE  */
+  YYSYMBOL_COPY = 8,                       /* COPY  */
+  YYSYMBOL_DELETE = 9,                     /* DELETE  */
+  YYSYMBOL_CLEAR = 10,                     /* CLEAR  */
+  YYSYMBOL_GOTO = 11,                      /* GOTO  */
+  YYSYMBOL_VIEW = 12,                      /* VIEW  */
+  YYSYMBOL_RECOVER = 13,                   /* RECOVER  */
+  YYSYMBOL_EMPTY = 14,                     /* EMPTY  */
+  YYSYMBOL_TRASH = 15,                     /* TRASH  */
+  YYSYMBOL_HELP = 16,                      /* HELP  */
+  YYSYMBOL_RENAME = 17,                    /* RENAME  */
+  YYSYMBOL_IDENTIFIER = 18,                /* IDENTIFIER  */
+  YYSYMBOL_STRING = 19,                    /* STRING  */
+  YYSYMBOL_NEWLINE = 20,                   /* NEWLINE  */
+  YYSYMBOL_YYACCEPT = 21,                  /* $accept  */
+  YYSYMBOL_commands = 22,                  /* commands  */
+  YYSYMBOL_23_1 = 23,                      /* $@1  */
+  YYSYMBOL_command = 24,                   /* command  */
+  YYSYMBOL_install_template = 25,          /* install_template  */
+  YYSYMBOL_create_project = 26,            /* create_project  */
+  YYSYMBOL_copy_template = 27,             /* copy_template  */
+  YYSYMBOL_delete_template = 28,           /* delete_template  */
+  YYSYMBOL_clear_terminal = 29,            /* clear_terminal  */
+  YYSYMBOL_cd_command = 30,                /* cd_command  */
+  YYSYMBOL_view_command = 31,              /* view_command  */
+  YYSYMBOL_delete_file_command = 32,       /* delete_file_command  */
+  YYSYMBOL_recover_file_command = 33,      /* recover_file_command  */
+  YYSYMBOL_empty_trash = 34,               /* empty_trash  */
+  YYSYMBOL_help_command = 35,              /* help_command  */
+  YYSYMBOL_copy_project = 36,              /* copy_project  */
+  YYSYMBOL_rename_project = 37,            /* rename_project  */
+  YYSYMBOL_create_template = 38,           /* create_template  */
+  YYSYMBOL_view_projects = 39              /* view_projects  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -469,21 +471,21 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  43
+#define YYFINAL  46
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   44
+#define YYLAST   50
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  20
+#define YYNTOKENS  21
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  18
+#define YYNNTS  19
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  35
+#define YYNRULES  38
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  61
+#define YYNSTATES  65
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   274
+#define YYMAXUTOK   275
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -524,7 +526,7 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19
+      15,    16,    17,    18,    19,    20
 };
 
 #if YYDEBUG
@@ -533,8 +535,8 @@ static const yytype_int8 yyrline[] =
 {
        0,    22,    22,    23,    23,    24,    28,    29,    30,    31,
       32,    33,    34,    35,    36,    37,    38,    39,    40,    41,
-      45,    49,    53,    57,    61,    65,    66,    70,    71,    75,
-      79,    83,    87,    91,    95,    98
+      42,    46,    50,    54,    58,    62,    66,    67,    68,    72,
+      73,    77,    81,    85,    89,    93,    97,   100,   104
 };
 #endif
 
@@ -551,13 +553,13 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "CREATE", "PROJECT",
-  "INSTALL", "TEMPLATE", "COPY", "DELETE", "CLEAR", "GOTO", "VIEW",
-  "RECOVER", "EMPTY", "TRASH", "HELP", "RENAME", "IDENTIFIER", "STRING",
-  "NEWLINE", "$accept", "commands", "$@1", "command", "install_template",
-  "create_project", "copy_template", "delete_template", "clear_terminal",
-  "cd_command", "view_command", "delete_file_command",
+  "PROJECTS", "INSTALL", "TEMPLATE", "COPY", "DELETE", "CLEAR", "GOTO",
+  "VIEW", "RECOVER", "EMPTY", "TRASH", "HELP", "RENAME", "IDENTIFIER",
+  "STRING", "NEWLINE", "$accept", "commands", "$@1", "command",
+  "install_template", "create_project", "copy_template", "delete_template",
+  "clear_terminal", "cd_command", "view_command", "delete_file_command",
   "recover_file_command", "empty_trash", "help_command", "copy_project",
-  "rename_project", "create_template", YY_NULLPTR
+  "rename_project", "create_template", "view_projects", YY_NULLPTR
 };
 
 static const char *
@@ -567,7 +569,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-14)
+#define YYPACT_NINF (-16)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -581,13 +583,13 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -2,    12,    -4,    15,     6,   -14,     7,   -13,     3,     1,
-     -14,    18,    -2,    26,   -14,     8,     9,    10,    11,    14,
-      16,    17,    19,    20,    21,    22,    23,    24,    25,   -14,
-     -14,    13,   -14,   -14,   -14,   -14,   -14,   -14,   -14,   -14,
-     -14,   -14,   -14,   -14,    -2,   -14,   -14,   -14,   -14,   -14,
-     -14,   -14,   -14,   -14,   -14,   -14,   -14,   -14,   -14,   -14,
-     -14
+      -2,    15,    -5,    16,    10,   -16,     8,    11,   -15,   -10,
+     -16,    17,    -2,    24,   -16,     5,    12,    13,    14,    18,
+      19,    20,    21,    22,    23,    25,    26,    27,    28,    29,
+     -16,   -16,    31,   -16,   -16,   -16,   -16,   -16,   -16,   -16,
+     -16,   -16,   -16,   -16,   -16,   -16,   -16,    -2,   -16,   -16,
+     -16,   -16,   -16,   -16,   -16,   -16,   -16,   -16,   -16,   -16,
+     -16,   -16,   -16,   -16,   -16
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -595,27 +597,27 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       2,     0,     0,     0,     0,    24,     0,    27,     0,     0,
-      32,     0,     2,     0,     3,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,    21,
-      35,     0,    33,    22,    23,    29,    25,    26,    28,    30,
-      31,    34,     5,     1,     2,     7,     6,     8,     9,    10,
-      11,    12,    13,    14,    15,    16,    17,    19,    18,    20,
-       4
+       2,     0,     0,     0,     0,    25,     0,    29,     0,     0,
+      34,     0,     2,     0,     3,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+      22,    37,     0,    35,    23,    24,    31,    28,    26,    27,
+      38,    30,    32,    33,    36,     5,     1,     2,     7,     6,
+       8,     9,    10,    11,    12,    13,    14,    15,    16,    17,
+      19,    18,    20,    21,     4
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -14,   -12,   -14,   -14,   -14,   -14,   -14,   -14,   -14,   -14,
-     -14,   -14,   -14,   -14,   -14,   -14,   -14,   -14
+     -16,   -12,   -16,   -16,   -16,   -16,   -16,   -16,   -16,   -16,
+     -16,   -16,   -16,   -16,   -16,   -16,   -16,   -16,   -16
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,    13,    44,    14,    15,    16,    17,    18,    19,    20,
-      21,    22,    23,    24,    25,    26,    27,    28
+       0,    13,    47,    14,    15,    16,    17,    18,    19,    20,
+      21,    22,    23,    24,    25,    26,    27,    28,    29
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -623,42 +625,44 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      42,     1,    31,     2,    38,     3,     4,     5,     6,     7,
-       8,     9,    34,    10,    11,    40,    29,    12,    30,    32,
-      39,    33,    41,    35,    36,    37,    43,    45,    46,    47,
-      48,    59,    60,    49,     0,    50,    51,     0,    52,    53,
-      54,    55,    56,    57,    58
+      45,     1,    32,    42,     2,    43,     3,     4,     5,     6,
+       7,     8,     9,    37,    10,    11,    40,    35,    12,    30,
+      33,    44,    31,    34,    46,    48,    38,    39,    36,    41,
+       0,     0,    49,    50,    51,    64,     0,     0,    52,    53,
+      54,    55,    56,    57,     0,    58,    59,    60,    61,    62,
+      63
 };
 
 static const yytype_int8 yycheck[] =
 {
-      12,     3,     6,     5,    17,     7,     8,     9,    10,    11,
-      12,    13,     6,    15,    16,    14,     4,    19,     6,     4,
-      17,     6,     4,    17,    17,    18,     0,    19,    19,    19,
-      19,    18,    44,    19,    -1,    19,    19,    -1,    19,    19,
-      19,    19,    19,    19,    19
+      12,     3,     7,    18,     6,    15,     8,     9,    10,    11,
+      12,    13,    14,     5,    16,    17,     5,     7,    20,     4,
+       4,     4,     7,     7,     0,    20,    18,    19,    18,    18,
+      -1,    -1,    20,    20,    20,    47,    -1,    -1,    20,    20,
+      20,    20,    20,    20,    -1,    20,    20,    20,    20,    20,
+      19
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,     5,     7,     8,     9,    10,    11,    12,    13,
-      15,    16,    19,    21,    23,    24,    25,    26,    27,    28,
-      29,    30,    31,    32,    33,    34,    35,    36,    37,     4,
-       6,     6,     4,     6,     6,    17,    17,    18,    17,    17,
-      14,     4,    21,     0,    22,    19,    19,    19,    19,    19,
-      19,    19,    19,    19,    19,    19,    19,    19,    19,    18,
-      21
+       0,     3,     6,     8,     9,    10,    11,    12,    13,    14,
+      16,    17,    20,    22,    24,    25,    26,    27,    28,    29,
+      30,    31,    32,    33,    34,    35,    36,    37,    38,    39,
+       4,     7,     7,     4,     7,     7,    18,     5,    18,    19,
+       5,    18,    18,    15,     4,    22,     0,    23,    20,    20,
+      20,    20,    20,    20,    20,    20,    20,    20,    20,    20,
+      20,    20,    20,    19,    22
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    20,    21,    22,    21,    21,    23,    23,    23,    23,
-      23,    23,    23,    23,    23,    23,    23,    23,    23,    23,
-      24,    25,    26,    27,    28,    29,    29,    30,    30,    31,
-      32,    33,    34,    35,    36,    37
+       0,    21,    22,    23,    22,    22,    24,    24,    24,    24,
+      24,    24,    24,    24,    24,    24,    24,    24,    24,    24,
+      24,    25,    26,    27,    28,    29,    30,    30,    30,    31,
+      31,    32,    33,    34,    35,    36,    37,    38,    39
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
@@ -666,8 +670,8 @@ static const yytype_int8 yyr2[] =
 {
        0,     2,     0,     0,     3,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       3,     2,     2,     2,     1,     2,     2,     1,     2,     2,
-       2,     2,     1,     2,     2,     2
+       2,     3,     2,     2,     2,     1,     2,     2,     2,     1,
+       2,     2,     2,     2,     1,     2,     2,     2,     2
 };
 
 
@@ -1133,107 +1137,119 @@ yyreduce:
   case 3: /* $@1: %empty  */
 #line 23 "src/parser/cli.y"
               { print_prompt(); fflush(stdout); }
-#line 1137 "build/cli.tab.c"
+#line 1141 "build/cli.tab.c"
     break;
 
-  case 20: /* install_template: INSTALL TEMPLATE STRING  */
-#line 45 "src/parser/cli.y"
+  case 21: /* install_template: INSTALL TEMPLATE STRING  */
+#line 46 "src/parser/cli.y"
                             { install_template_cmd((yyvsp[0].string));  }
-#line 1143 "build/cli.tab.c"
+#line 1147 "build/cli.tab.c"
     break;
 
-  case 21: /* create_project: CREATE PROJECT  */
-#line 49 "src/parser/cli.y"
+  case 22: /* create_project: CREATE PROJECT  */
+#line 50 "src/parser/cli.y"
                    { create_project_cmd(); }
-#line 1149 "build/cli.tab.c"
+#line 1153 "build/cli.tab.c"
     break;
 
-  case 22: /* copy_template: COPY TEMPLATE  */
-#line 53 "src/parser/cli.y"
+  case 23: /* copy_template: COPY TEMPLATE  */
+#line 54 "src/parser/cli.y"
                   { copy_template_cmd(); }
-#line 1155 "build/cli.tab.c"
+#line 1159 "build/cli.tab.c"
     break;
 
-  case 23: /* delete_template: DELETE TEMPLATE  */
-#line 57 "src/parser/cli.y"
+  case 24: /* delete_template: DELETE TEMPLATE  */
+#line 58 "src/parser/cli.y"
                     { delete_template_cmd(); }
-#line 1161 "build/cli.tab.c"
+#line 1165 "build/cli.tab.c"
     break;
 
-  case 24: /* clear_terminal: CLEAR  */
-#line 61 "src/parser/cli.y"
+  case 25: /* clear_terminal: CLEAR  */
+#line 62 "src/parser/cli.y"
           { clear_terminal_cmd(); }
-#line 1167 "build/cli.tab.c"
+#line 1171 "build/cli.tab.c"
     break;
 
-  case 25: /* cd_command: GOTO IDENTIFIER  */
-#line 65 "src/parser/cli.y"
-                    { cd_cmd((yyvsp[0].string)); }
-#line 1173 "build/cli.tab.c"
-    break;
-
-  case 26: /* cd_command: GOTO STRING  */
+  case 26: /* cd_command: GOTO IDENTIFIER  */
 #line 66 "src/parser/cli.y"
                     { cd_cmd((yyvsp[0].string)); }
-#line 1179 "build/cli.tab.c"
+#line 1177 "build/cli.tab.c"
     break;
 
-  case 27: /* view_command: VIEW  */
-#line 70 "src/parser/cli.y"
+  case 27: /* cd_command: GOTO STRING  */
+#line 67 "src/parser/cli.y"
+                    { cd_cmd((yyvsp[0].string)); }
+#line 1183 "build/cli.tab.c"
+    break;
+
+  case 28: /* cd_command: GOTO PROJECTS  */
+#line 68 "src/parser/cli.y"
+                    { cd_cmd("projects"); }
+#line 1189 "build/cli.tab.c"
+    break;
+
+  case 29: /* view_command: VIEW  */
+#line 72 "src/parser/cli.y"
          { view_cmd("."); }
-#line 1185 "build/cli.tab.c"
+#line 1195 "build/cli.tab.c"
     break;
 
-  case 28: /* view_command: VIEW IDENTIFIER  */
-#line 71 "src/parser/cli.y"
+  case 30: /* view_command: VIEW IDENTIFIER  */
+#line 73 "src/parser/cli.y"
                     { view_cmd((yyvsp[0].string)); }
-#line 1191 "build/cli.tab.c"
+#line 1201 "build/cli.tab.c"
     break;
 
-  case 29: /* delete_file_command: DELETE IDENTIFIER  */
-#line 75 "src/parser/cli.y"
+  case 31: /* delete_file_command: DELETE IDENTIFIER  */
+#line 77 "src/parser/cli.y"
                       { delete_file_cmd((yyvsp[0].string)); }
-#line 1197 "build/cli.tab.c"
+#line 1207 "build/cli.tab.c"
     break;
 
-  case 30: /* recover_file_command: RECOVER IDENTIFIER  */
-#line 79 "src/parser/cli.y"
+  case 32: /* recover_file_command: RECOVER IDENTIFIER  */
+#line 81 "src/parser/cli.y"
                        { recover_file_cmd((yyvsp[0].string)); }
-#line 1203 "build/cli.tab.c"
+#line 1213 "build/cli.tab.c"
     break;
 
-  case 31: /* empty_trash: EMPTY TRASH  */
-#line 83 "src/parser/cli.y"
+  case 33: /* empty_trash: EMPTY TRASH  */
+#line 85 "src/parser/cli.y"
                 { empty_trash(); }
-#line 1209 "build/cli.tab.c"
+#line 1219 "build/cli.tab.c"
     break;
 
-  case 32: /* help_command: HELP  */
-#line 87 "src/parser/cli.y"
+  case 34: /* help_command: HELP  */
+#line 89 "src/parser/cli.y"
          { show_help(); }
-#line 1215 "build/cli.tab.c"
+#line 1225 "build/cli.tab.c"
     break;
 
-  case 33: /* copy_project: COPY PROJECT  */
-#line 91 "src/parser/cli.y"
+  case 35: /* copy_project: COPY PROJECT  */
+#line 93 "src/parser/cli.y"
                  { copy_project_cmd(); }
-#line 1221 "build/cli.tab.c"
+#line 1231 "build/cli.tab.c"
     break;
 
-  case 34: /* rename_project: RENAME PROJECT  */
-#line 95 "src/parser/cli.y"
+  case 36: /* rename_project: RENAME PROJECT  */
+#line 97 "src/parser/cli.y"
                    { rename_project_cmd(); }
-#line 1227 "build/cli.tab.c"
-    break;
-
-  case 35: /* create_template: CREATE TEMPLATE  */
-#line 98 "src/parser/cli.y"
-                    { create_template_cmd(); }
-#line 1233 "build/cli.tab.c"
-    break;
-
-
 #line 1237 "build/cli.tab.c"
+    break;
+
+  case 37: /* create_template: CREATE TEMPLATE  */
+#line 100 "src/parser/cli.y"
+                    { create_template_cmd(); }
+#line 1243 "build/cli.tab.c"
+    break;
+
+  case 38: /* view_projects: VIEW PROJECTS  */
+#line 104 "src/parser/cli.y"
+                  { view_projects_cmd(); }
+#line 1249 "build/cli.tab.c"
+    break;
+
+
+#line 1253 "build/cli.tab.c"
 
       default: break;
     }
@@ -1426,7 +1442,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 101 "src/parser/cli.y"
+#line 107 "src/parser/cli.y"
 
 
 void yyerror(const char *s) {

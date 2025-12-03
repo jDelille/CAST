@@ -56,21 +56,22 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     CREATE = 258,                  /* CREATE  */
     PROJECT = 259,                 /* PROJECT  */
-    INSTALL = 260,                 /* INSTALL  */
-    TEMPLATE = 261,                /* TEMPLATE  */
-    COPY = 262,                    /* COPY  */
-    DELETE = 263,                  /* DELETE  */
-    CLEAR = 264,                   /* CLEAR  */
-    GOTO = 265,                    /* GOTO  */
-    VIEW = 266,                    /* VIEW  */
-    RECOVER = 267,                 /* RECOVER  */
-    EMPTY = 268,                   /* EMPTY  */
-    TRASH = 269,                   /* TRASH  */
-    HELP = 270,                    /* HELP  */
-    RENAME = 271,                  /* RENAME  */
-    IDENTIFIER = 272,              /* IDENTIFIER  */
-    STRING = 273,                  /* STRING  */
-    NEWLINE = 274                  /* NEWLINE  */
+    PROJECTS = 260,                /* PROJECTS  */
+    INSTALL = 261,                 /* INSTALL  */
+    TEMPLATE = 262,                /* TEMPLATE  */
+    COPY = 263,                    /* COPY  */
+    DELETE = 264,                  /* DELETE  */
+    CLEAR = 265,                   /* CLEAR  */
+    GOTO = 266,                    /* GOTO  */
+    VIEW = 267,                    /* VIEW  */
+    RECOVER = 268,                 /* RECOVER  */
+    EMPTY = 269,                   /* EMPTY  */
+    TRASH = 270,                   /* TRASH  */
+    HELP = 271,                    /* HELP  */
+    RENAME = 272,                  /* RENAME  */
+    IDENTIFIER = 273,              /* IDENTIFIER  */
+    STRING = 274,                  /* STRING  */
+    NEWLINE = 275                  /* NEWLINE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -83,7 +84,7 @@ union YYSTYPE
 
     char *string;
 
-#line 87 "build/cli.tab.h"
+#line 88 "build/cli.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
