@@ -16,6 +16,7 @@
 #include "../utils/utils.h"
 #include "../utils/selection.h"
 #include "../utils/defs.h"
+#include "../api/download_template.h"
 
 void create_project_cmd()
 {
@@ -269,10 +270,6 @@ void print_prompt()
     fflush(stdout);
 }
 
-/**
- * Add download & upload template commands
- * This will download a template from the docs website database
- * users can upload and download templates on the docs website
- * upload <template-path>
- * download <template-path>
- */
+void download_template_cmd(const char *path) {
+    download_template(path);
+}

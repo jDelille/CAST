@@ -28,6 +28,7 @@ void yyerror(const char *s);
 "trash"         { return TRASH; }
 "help"          { return HELP; }
 "rename"        { return RENAME; }
+"download"      { return DOWNLOAD; }
 
 [a-zA-Z_./][a-zA-Z0-9_./]* {
     yylval.string = strdup(yytext);

@@ -13,7 +13,7 @@ void yyerror(const char *s);
     char *string;
 }
 
-%token CREATE PROJECT PROJECTS INSTALL TEMPLATE TEMPLATES COPY DELETE CLEAR GOTO VIEW RECOVER EMPTY TRASH HELP RENAME
+%token CREATE PROJECT PROJECTS INSTALL TEMPLATE TEMPLATES COPY DELETE CLEAR GOTO VIEW RECOVER EMPTY TRASH HELP RENAME DOWNLOAD
 %token <string> IDENTIFIER STRING
 %token NEWLINE
 
@@ -45,6 +45,7 @@ command:
     | view_trash NEWLINE
     | view_templates NEWLINE
     | rename_template NEWLINE
+    | download_template NEWLINE
 ;
 
 partial_command:
@@ -131,7 +132,14 @@ view_trash:
 view_templates:
     VIEW TEMPLATES { view_cmd(".templates"); }
 ;
+
+download_template:
+    DOWNLOAD TEMPLATE STRING { download_template_cmd($3); }
+;
+
 %%
+
+
 
 void yyerror(const char *s) {
     fprintf(stderr, "Parse error: %s\n", s);

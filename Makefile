@@ -5,8 +5,8 @@
 # Compiler and flags
 CC      := gcc
 CFLAGS  := -Wall -g -Wno-unused-function \
-            -I build -I src -I src/commands -I src/scaffold -I src/template -I src/project -I src/utils
-LDFLAGS := -lfl -lreadline
+            -I build -I src -I src/commands -I src/scaffold -I src/template -I src/project -I src/utils -I src/api -I src/store
+LDFLAGS := -lfl -lreadline -lcurl -ljson-c
 
 # Build paths
 BUILD_DIR := build
@@ -21,6 +21,9 @@ SRCS := src/main.c \
         src/scaffold/scaffold.c \
         src/template/template.c \
 		src/project/project.c \
+		src/api/download_template.c \
+		src/api/supabase.c \
+		src/store/store.c \
         $(UTIL_SRCS) \
         $(BUILD_DIR)/lex.yy.c \
         $(BUILD_DIR)/cli.tab.c

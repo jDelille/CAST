@@ -19,5 +19,6 @@ void rename_project_cmd();
 void view_projects_cmd();
 void show_usage(const char *command);
 void rename_template_cmd();
+void download_template_cmd(const char *path);
 
 #endif 
