@@ -17,6 +17,7 @@ CommandHelp commands[] = {
     {"rename template", "Rename a template"},
     {"copy template", "Copy an existing template to a new name"},
     {"delete template", "Delete an existing template"},
+    {"download template", "Download a template from the docs website"},
 
     {"view [path]", "List all files and folders | optionally specify a path"},
     {"clear", "Clear the terminal"},

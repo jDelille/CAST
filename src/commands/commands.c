@@ -96,6 +96,8 @@ void show_usage(const char *command) {
         printf("Usage: install template <template_path>\n");
     } else if (strcmp(command, "RENAME") == 0){
         printf("Usage: rename project | rename template\n");
+    } else if (strcmp(command, "DOWNLOAD") == 0){
+        printf("Usage: download template '<template_name>'\n");
     } else {
         printf("Unknown command. Type HELP for a list of commands.\n");
     }

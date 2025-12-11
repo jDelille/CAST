@@ -49,13 +49,14 @@ command:
 ;
 
 partial_command:
-      CREATE NEWLINE  { show_usage("CREATE"); }
-    | COPY NEWLINE    { show_usage("COPY"); }
-    | DELETE NEWLINE  { show_usage("DELETE"); }
-    | EMPTY NEWLINE   { show_usage("EMPTY"); }
-    | GOTO NEWLINE    { show_usage("GOTO"); }
-    | INSTALL NEWLINE { show_usage("INSTALL"); }
-    | RENAME NEWLINE  { show_usage("RENAME"); }
+      CREATE NEWLINE   { show_usage("CREATE"); }
+    | COPY NEWLINE     { show_usage("COPY"); }
+    | DELETE NEWLINE   { show_usage("DELETE"); }
+    | EMPTY NEWLINE    { show_usage("EMPTY"); }
+    | GOTO NEWLINE     { show_usage("GOTO"); }
+    | INSTALL NEWLINE  { show_usage("INSTALL"); }
+    | RENAME NEWLINE   { show_usage("RENAME"); }
+    | DOWNLOAD TEMPLATE NEWLINE { show_usage("DOWNLOAD"); }
 ;
 
 install_template: 

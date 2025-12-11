@@ -61,7 +61,7 @@ $(TARGET): $(SRCS) src/utils/defs.h | $(BUILD_DIR)
 
 # Run CLI
 run: $(TARGET)
-	@./$(TARGET)
+	@export $$(grep -v '^#' .env | xargs) && ./$(TARGET)
 
 # Clean build
 clean:
