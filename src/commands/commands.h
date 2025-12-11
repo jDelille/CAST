@@ -8,7 +8,7 @@ void delete_template_cmd();
 void clear_terminal_cmd();
 void cd_cmd(const char *project_folder);
 void view_cmd(const char *path);
-void delete_file_cmd(char *filename);
+void delete_cmd(const char *name);
 void recover_file_cmd(const char *filename);
 void empty_trash(); 
 void print_prompt();
@@ -20,5 +20,6 @@ void view_projects_cmd();
 void show_usage(const char *command);
 void rename_template_cmd();
 void download_template_cmd(const char *path);
+void delete_project_cmd();
 
 #endif 

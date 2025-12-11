@@ -181,21 +181,81 @@ void view_cmd(const char *path)
     closedir(d);
 }
 
-void delete_file_cmd(char *filename)
-{
+void delete_cmd(const char *name) {
     mkdir(".trash", 0700);
 
     char trash_path[512];
-    snprintf(trash_path, sizeof(trash_path), ".trash/%s", filename);
+    snprintf(trash_path, sizeof(trash_path), ".trash/%s", name);
 
-    if (rename(filename, trash_path) == 0)
-    {
-        printf("Moved %s to the trash\n", filename);
-        fflush(stdout);
+    struct stat st;
+    if (stat(name, &st) != 0) {
+        perror("Error: file or folder not found");
+        return;
     }
-    else
+
+    if (rename(name, trash_path) == 0) {
+        printf("Moved '%s' to the trash\n", name);
+    } else {
+        perror("Error moving to trash");
+    }
+    fflush(stdout);
+}
+
+void delete_project()
+{
+    while (1)
     {
-        perror("Error deleting file\n");
+        char projects_list[64][256];
+        int num_projects = list_projects(projects_list, 64);
+
+        int filtered_count = 0;
+        const char *project_names[65];
+        for (int i = 0; i < num_projects; i++) {
+            if (strcmp(projects_list[i], ".trash") != 0) {
+                project_names[filtered_count++] = projects_list[i];
+            }
+        }
+
+        if (filtered_count == 0)
+        {
+            printf("No projects found to delete.\n");
+            return;
+        }
+
+        project_names[filtered_count] = "Quit";
+
+        int selected = selection("Which project do you want to delete?", project_names, filtered_count + 1);
+        if (selected == filtered_count || selected < 0)
+        {
+            break;
+        }
+
+        const char *selected_project = project_names[selected];
+        const char *yes_no[] = {"Yes", "No"};
+        int confirm = selection("Are you sure you want to delete this project?", yes_no, 2);
+
+        if (confirm != 0)
+        {
+            printf("Deletion canceled.\n");
+            continue;
+        }
+
+        mkdir(".trash", 0700); 
+
+        char old_path[512];
+        snprintf(old_path, sizeof(old_path), "projects/%s", selected_project);
+
+        char trash_path[512];
+        snprintf(trash_path, sizeof(trash_path), ".trash/%s", selected_project);
+
+        if (rename(old_path, trash_path) == 0)
+        {
+            printf("Project '%s' moved to trash successfully.\n", selected_project);
+        }
+        else
+        {
+            perror("Failed to delete project");
+        }
     }
 }
 

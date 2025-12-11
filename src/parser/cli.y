@@ -46,6 +46,7 @@ command:
     | view_templates NEWLINE
     | rename_template NEWLINE
     | download_template NEWLINE
+    | delete_project_command NEWLINE
 ;
 
 partial_command:
@@ -91,7 +92,11 @@ view_command:
 ;
 
 delete_file_command:
-    DELETE IDENTIFIER { delete_file_cmd($2); }
+    DELETE IDENTIFIER { delete_cmd($2); }
+;
+
+delete_project_command:
+    DELETE PROJECT { delete_project_cmd(); }
 ;
 
 recover_file_command:
