@@ -31,7 +31,6 @@ CommandHelp commands[] = {
 
 
 void show_help() {
-    // Determine the maximum length of command strings
     int max_len = 0;
     for (int i = 0; i < sizeof(commands)/sizeof(commands[0]); i++) {
         int len = strlen(commands[i].command);
@@ -40,7 +39,6 @@ void show_help() {
 
     printf("\nAvailable commands:\n");
     for (int i = 0; i < sizeof(commands)/sizeof(commands[0]); i++) {
-        // Align descriptions based on the longest command
         printf("  %-*s - %s\n", max_len, commands[i].command, commands[i].description);
     }
     printf("\n");

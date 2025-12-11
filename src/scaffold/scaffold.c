@@ -13,7 +13,6 @@
 #include "../utils/selection.h"
 #include "../utils/utils.h"
 
-/* List templates */
 int list_templates(char templates[][256], int max_templates)
 {
     char* templates_dir = find_templates_directory();
@@ -54,7 +53,6 @@ int list_templates(char templates[][256], int max_templates)
     return count;
 }
 
-/* Step 1: Project Name */
 void get_project_name(char *project_name, size_t size)
 {
     printf("%s What is your project named? » ", ICON_QUESTION);
@@ -68,7 +66,6 @@ void get_project_name(char *project_name, size_t size)
     printf("%s What is your project named? » %s\n", GREEN_CHECK, project_name);
 }
 
-/* Step 2: Project Template */
 int choose_template(char *template_name, size_t size)
 {
     char templates_list[64][256];

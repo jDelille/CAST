@@ -4,46 +4,63 @@
 #include <string.h>
 #include <stdio.h>
 
-#define SUPABASE_URL "https://jqtqviwsnmxgjzglrhbt.supabase.co/rest/v1"
-#define API_KEY "sb_publishable_noNFgBeg1X9CbPUItrokYA_4z5wQ6wW"
-
 struct memory {
-    char *response;
+    char *buffer;
     size_t size;
 };
 
-static size_t write_mem(void *ptr, size_t size, size_t nmemb, void *userdata) {
-    size_t total = size * nmemb;
-    struct memory *mem = userdata;
+static size_t write_callback(void *data, size_t size, size_t count, void *user_data) {
+    size_t total = size * count;
+    struct memory *mem = user_data;
 
-    char *new_resp = realloc(mem->response, mem->size + total + 1);
-    if (!new_resp) return 0;
+    if (!mem) return 0;
 
-    mem->response = new_resp;
-    memcpy(mem->response + mem->size, ptr, total);
+    char *new_buffer = realloc(mem->buffer, mem->size + total + 1);
+    if (!new_buffer) return 0; 
+
+    mem->buffer = new_buffer;
+    memcpy(mem->buffer + mem->size, data, total);
     mem->size += total;
-    mem->response[mem->size] = '\0';
+    mem->buffer[mem->size] = '\0';
 
     return total;
 }
 
 char *supabase_get(const char *table, const char *query) {
+    const char *url = getenv("SUPABASE_URL");
+    if (!url) {
+        fprintf(stderr, "Error: SUPABASE_URL not set\n");
+        return NULL;
+    }
+
+    const char *key = getenv("SUPABASE_API_KEY");
+    if (!key) {
+        fprintf(stderr, "Error: SUPABASE_API_KEY not set\n");
+        return NULL;
+    }
+
     CURL *curl = curl_easy_init();
     if (!curl) return NULL;
 
-    char url[512];
-    snprintf(url, sizeof(url), "%s/%s?select=*&%s", SUPABASE_URL, table, query);
+    char full_url[512];
+    snprintf(full_url, sizeof(full_url), "%s/%s?select=*&%s", url, table, query);
 
-    struct memory mem = {0};
+    struct memory response = { .buffer = NULL, .size = 0 };
 
     struct curl_slist *headers = NULL;
     headers = curl_slist_append(headers, "Content-Type: application/json");
-    headers = curl_slist_append(headers, "apikey: " API_KEY);
-    headers = curl_slist_append(headers, "Authorization: Bearer " API_KEY);
 
-    curl_easy_setopt(curl, CURLOPT_URL, url);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_mem);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &mem);
+    char api_header[256];
+    snprintf(api_header, sizeof(api_header), "apikey: %s", key);
+    headers = curl_slist_append(headers, api_header);
+
+    char auth_header[256];
+    snprintf(auth_header, sizeof(auth_header), "Authorization: Bearer %s", key);
+    headers = curl_slist_append(headers, auth_header);
+
+    curl_easy_setopt(curl, CURLOPT_URL, full_url);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
     CURLcode res = curl_easy_perform(curl);
@@ -52,9 +69,10 @@ char *supabase_get(const char *table, const char *query) {
     curl_slist_free_all(headers);
 
     if (res != CURLE_OK) {
-        free(mem.response);
+        free(response.buffer);
+        fprintf(stderr, "CURL failed: %s\n", curl_easy_strerror(res));
         return NULL;
     }
 
-    return mem.response; // caller frees this
+    return response.buffer; // remember to free!
 }

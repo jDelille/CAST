@@ -101,7 +101,6 @@ void show_usage(const char *command) {
     }
 }
 
-
 void create_directory(const char *dir_name)
 {
     if (mkdir(dir_name, 0755) == -1)
@@ -220,8 +219,6 @@ void recover_file_cmd(const char *filename)
     }
 }
 
-
-/* Delete each file/folder in directory in the trash when empty_trash() is called */
 int remove_callback(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf)
 {
     (void)sb;
@@ -254,7 +251,7 @@ void print_prompt()
     {
         if (strncmp(cwd, ROOT_FOLDER, strlen(ROOT_FOLDER)) == 0)
         {
-            const char *relative = cwd + strlen(DESKTOP_PATH); // start at root directory
+            const char *relative = cwd + strlen(DESKTOP_PATH); 
             printf("%s%s> %s", STYLE_CYAN_BLUE, relative, STYLE_RESET);
         }
         else

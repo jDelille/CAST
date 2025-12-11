@@ -5,20 +5,11 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include <sys/stat.h> 
-#include <libgen.h>    
+#include <sys/stat.h>
+#include <libgen.h>
 #include <dirent.h>
 #include <errno.h>
 
-/**
- * @brief Reads a single character from standard input without waiting for the Enter key
- *        and without echoing it to the terminal.
- *
- * This function temporarily disables canonical mode and echoing on the terminal
- * to allow for capturing a single key press immediately.
- *
- * @return int (The character code for the key pressed)
- */
 int getch()
 {
     struct termios oldt, newt;
@@ -38,9 +29,10 @@ int getch()
 void sanitize_path(char *path)
 {
     if (!path)
+    {
         return;
+    }
 
-    // Remove trailing newline
     path[strcspn(path, "\n")] = '\0';
 
     size_t length = strlen(path);
@@ -51,22 +43,20 @@ void sanitize_path(char *path)
         length -= 2;
     }
 
-    // Trim leading spaces
     char *start = path;
     while (*start == ' ')
     {
         start++;
     }
 
-    // Trim trailing spaces
     char *end = path + strlen(path) - 1;
     while (end > start && *end == ' ')
     {
         end--;
     }
+
     *(end + 1) = '\0';
 
-    // Move cleaned string to the beginning
     if (start != path)
     {
         memmove(path, start, strlen(start) + 1);
@@ -112,7 +102,8 @@ bool ensure_template_dir_exists(void)
     return access(".templates", F_OK) == 0 || mkdir(".templates", 0700) == 0;
 }
 
-bool ensure_projects_dir_exists(void) {
+bool ensure_projects_dir_exists(void)
+{
     return access("projects", F_OK) == 0 || mkdir("projects", 0700) == 0;
 }
 
@@ -162,23 +153,25 @@ void trim_trailing_whitespace(char *string)
 
 void ensure_parent_dirs(const char *file_path)
 {
-      char tmp[512];
+    char tmp[512];
     strncpy(tmp, file_path, sizeof(tmp));
     tmp[sizeof(tmp) - 1] = '\0';
 
-    char *dir = dirname(tmp); // parent directory
+    char *dir = dirname(tmp);
 
     char path[512] = "";
-    char *segment = strtok(dir, "/"); // split by slash
+    char *segment = strtok(dir, "/");
 
-    while (segment) {
-        if (strlen(path) > 0) {
+    while (segment)
+    {
+        if (strlen(path) > 0)
+        {
             strncat(path, "/", sizeof(path) - strlen(path) - 1);
         }
         strncat(path, segment, sizeof(path) - strlen(path) - 1);
 
-        // Create this segment if it doesn't exist
-        if (mkdir(path, 0755) != 0 && errno != EEXIST) {
+        if (mkdir(path, 0755) != 0 && errno != EEXIST)
+        {
             perror("mkdir failed");
         }
 
@@ -186,36 +179,37 @@ void ensure_parent_dirs(const char *file_path)
     }
 }
 
-bool directory_exists(const char *dir_name) {
+bool directory_exists(const char *dir_name)
+{
     struct stat statbuf;
     return (stat(dir_name, &statbuf) == 0 && S_ISDIR(statbuf.st_mode));
 }
 
-char* find_templates_directory() {
+char *find_templates_directory()
+{
     char current_dir[512];
 
-    // Start from the root of the project, specify this directory explicitly
-    const char *root_directory = "/mnt/c/Users/justi/Desktop/beam";  
+    const char *root_directory = "/mnt/c/Users/justi/Desktop/beam";
 
-    // Set the current directory to root directory
     strncpy(current_dir, root_directory, sizeof(current_dir));
-    current_dir[sizeof(current_dir) - 1] = '\0';  // Ensure null termination
+    current_dir[sizeof(current_dir) - 1] = '\0';
 
-    // Look for the .templates folder in the root directory or its subdirectories
     DIR *d = opendir(current_dir);
-    if (d) {
+    if (d)
+    {
         struct dirent *entry = readdir(d);
-        while (entry) {
-            if (strcmp(entry->d_name, ".templates") == 0) {
+        while (entry)
+        {
+            if (strcmp(entry->d_name, ".templates") == 0)
+            {
                 closedir(d);
-                return strdup(current_dir); 
+                return strdup(current_dir);
             }
             entry = readdir(d);
         }
         closedir(d);
     }
 
-    // If not found, print error
     printf("Error: .templates directory not found.\n");
     return NULL;
 }
@@ -254,7 +248,10 @@ void replace_placeholders(
 
         size_t key_len = end_bracket - start_bracket - 1;
         if (key_len >= sizeof(placeholder))
+        {
             key_len = sizeof(placeholder) - 1;
+        }
+
         strncpy(placeholder, start_bracket + 1, key_len);
         placeholder[key_len] = '\0';
 
@@ -266,7 +263,6 @@ void replace_placeholders(
             strncpy(default_value, equal_sign + 1, sizeof(default_value));
         }
 
-        // Find replacement from user input
         const char *replacement = default_value;
 
         for (int i = 0; i < key_count; i++)

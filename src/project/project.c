@@ -8,8 +8,11 @@
 
 bool is_directory(const char *path) {
     struct stat st;
-    if (stat(path, &st) != 0)
+
+    if (stat(path, &st) != 0) {
         return false;
+    }
+
     return S_ISDIR(st.st_mode);
 }
 
@@ -19,6 +22,7 @@ int list_projects(char projects_list[][256], int max_projects) {
 
     int count = 0;
     struct dirent *entry;
+
     while ((entry = readdir(d)) != NULL && count < max_projects) {
         if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
             continue;
@@ -32,12 +36,14 @@ int list_projects(char projects_list[][256], int max_projects) {
             count++;
         }
     }
+
     closedir(d);
     return count;
 }
 
 bool copy_folder(const char *src_path, const char *dest_path) {
     struct stat st = {0};
+
     if (stat(dest_path, &st) == -1) {
         mkdir(dest_path, 0755);
     }
@@ -46,6 +52,7 @@ bool copy_folder(const char *src_path, const char *dest_path) {
     if (!dir) return false;
 
     struct dirent *entry;
+    
     while ((entry = readdir(dir)) != NULL) {
         if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
             continue;

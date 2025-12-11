@@ -31,7 +31,6 @@ typedef struct
     char file_name[256];
 } Placeholder;
 
-// Global arrays
 PendingFile files[MAX_PENDING_FILES];
 int file_count = 0;
 
@@ -84,7 +83,6 @@ const char *get_placeholder(
 
 void create_dir_from_line(const char *line, const char *projectName)
 {
-    // Skip leading spaces & slashes
     while (*line == ' ' || *line == '/')
     {
         line++;
@@ -97,7 +95,6 @@ void create_dir_from_line(const char *line, const char *projectName)
 
     size_t len = strlen(line);
 
-    // ends with '/'
     if (len == 0 || line[len - 1] != '/')
     {
         return;
@@ -179,14 +176,16 @@ int extract_placeholders_from_template(
         while ((cursor = strchr(cursor, '[')) != NULL)
         {
             const char *end_bracket = strchr(cursor, ']');
-            if (!end_bracket)
+            if (!end_bracket) {
                 break;
-
+            }
+                
             char content[256];
             size_t content_len = end_bracket - cursor - 1;
-            if (content_len >= sizeof(content))
+            if (content_len >= sizeof(content)) {
                 content_len = sizeof(content) - 1;
-
+            }
+                
             strncpy(content, cursor + 1, content_len);
             content[content_len] = '\0';
 
@@ -240,7 +239,6 @@ int extract_placeholders_from_template(
     return placeholder_count;
 }
 
-/* Copy a template */
 void copy_template()
 {
     char templates_list[64][256];
@@ -289,7 +287,6 @@ void copy_template()
         printf("Failed to copy template.\n");
 }
 
-/* Delete a template */
 void delete_template()
 {
     while (1)
@@ -340,7 +337,6 @@ void delete_template()
     }
 }
 
-/* Rename a template*/
 void rename_template()
 {
     char templates_list[64][256];
@@ -403,7 +399,6 @@ void rename_template()
     }
 }
 
-/* Create a template */
 void create_template()
 {
     char template_name[256];
@@ -419,7 +414,6 @@ void create_template()
         return;
     }
 
-    // Remove newline
     template_name[strcspn(template_name, "\n")] = 0;
 
     if (strlen(template_name) == 0)
@@ -467,7 +461,6 @@ void create_template()
     printf("Template '%s' created successfully in '%s'!\n", template_name, folder);
 }
 
-/* Generate a new project from a template */
 void generate_project_from_template(const char *templateName, const char *projectName, bool customize)
 {
     char templatePath[512];
@@ -518,7 +511,6 @@ void generate_project_from_template(const char *templateName, const char *projec
     int global_count = 0;
     file_count = 0;
 
-    // scan all files and placeholders
     while (fgets(line, sizeof(line), templateFile))
     {
         if (strncmp(line, "//", 2) == 0) {
@@ -561,13 +553,16 @@ void generate_project_from_template(const char *templateName, const char *projec
             while ((cursor = strchr(cursor, '[')) != NULL)
             {
                 const char *end_bracket = strchr(cursor, ']');
-                if (!end_bracket)
+                if (!end_bracket) {
                     break;
+                }
 
                 char content[256];
                 size_t len = end_bracket - cursor - 1;
-                if (len >= sizeof(content))
+                if (len >= sizeof(content)) {
                     len = sizeof(content) - 1;
+                }
+                    
                 strncpy(content, cursor + 1, len);
                 content[len] = '\0';
 
@@ -596,7 +591,6 @@ void generate_project_from_template(const char *templateName, const char *projec
                     continue;
                 }
 
-                // Add to global placeholders if not exists
                 bool exists = false;
                 for (int i = 0; i < global_count; i++)
                 {
@@ -621,7 +615,6 @@ void generate_project_from_template(const char *templateName, const char *projec
         }
     }
 
-    // prompt user for placeholders
     if (customize)
     {
         printf("\n");
@@ -640,7 +633,6 @@ void generate_project_from_template(const char *templateName, const char *projec
         }
     }
 
-    // generate all files
     const char *key_ptrs[MAX_GLOBAL_PLACEHOLDERS];
     const char *replacement_ptrs[MAX_GLOBAL_PLACEHOLDERS];
     for (int i = 0; i < global_count; i++)

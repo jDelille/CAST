@@ -26,16 +26,22 @@ int selection(const char *prompt, const char *options[], int num_options)
     {
         if (is_yes_no)
         {
-            // Redraw horizontal Yes/No menu
             printf("\r\033[2K%s %s » ", ICON_QUESTION, prompt);
             for (int i = 0; i < num_options; i++)
             {
                 if (i == selected)
+                {
                     printf("%s%s%s", STYLE_BLUE_UNDERLINE, options[i], STYLE_RESET);
+                }
                 else
+                {
                     printf("%s", options[i]);
+                }
+
                 if (i < num_options - 1)
+                {
                     printf(" / ");
+                }
             }
             fflush(stdout);
 
@@ -44,9 +50,14 @@ int selection(const char *prompt, const char *options[], int num_options)
             {
                 int arrow = getch();
                 if (arrow == KEY_ARROW_RIGHT && selected < num_options - 1)
+                {
                     selected++;
+                }
+
                 if (arrow == KEY_ARROW_LEFT && selected > 0)
+                {
                     selected--;
+                }
             }
             else if (ch == KEY_ENTER || ch == '\n' || ch == '\r')
             {
@@ -57,13 +68,16 @@ int selection(const char *prompt, const char *options[], int num_options)
         }
         else
         {
-            // Original vertical list logic
             for (int i = 0; i < num_options; i++)
             {
                 if (i == selected)
+                {
                     PRINT_HIGHLIGHTED(options[i]);
+                }
                 else
+                {
                     PRINT_NORMAL(options[i]);
+                }
             }
 
             ch = getch();
@@ -72,19 +86,26 @@ int selection(const char *prompt, const char *options[], int num_options)
             {
                 int arrow = getch();
                 if (arrow == KEY_ARROW_DOWN && selected < num_options - 1)
+                {
                     selected++;
+                }
+
                 if (arrow == KEY_ARROW_UP && selected > 0)
+                {
                     selected--;
+                }
             }
             else if (ch == KEY_ENTER || ch == '\n' || ch == '\r')
             {
                 SHOW_CURSOR();
-                // Clear previous menu (prompt + list)
                 MOVE_CURSOR_UP(num_options + 1);
                 for (int i = 0; i < num_options + 1; i++)
                 {
                     CLEAR_LINE();
-                    if (i < num_options) MOVE_CURSOR_DOWN(1);
+                    if (i < num_options)
+                    {
+                        MOVE_CURSOR_DOWN(1);
+                    }
                 }
                 MOVE_CURSOR_UP(num_options);
 
@@ -92,7 +113,6 @@ int selection(const char *prompt, const char *options[], int num_options)
                 return selected;
             }
 
-            // Redraw vertical menu
             MOVE_CURSOR_UP(num_options);
             for (int i = 0; i < num_options; i++)
             {
